@@ -99,7 +99,7 @@
                                            data-quantity="{{ $product->quantity }}"
                                            class="edit-product"
                                            title="Edit"><i class="bi bi-pencil-square"></i></a>
-                                        <a href="{{ url('/product/delete/' . $product->product_id) }}"
+                                        <a href="{{ url('/product/delete/' . $product->id) }}"
                                         class="text-danger ms-2"
                                         onclick="return confirm('Are you sure you want to delete this product?')">
                                         <i class="bi bi-trash"></i>
