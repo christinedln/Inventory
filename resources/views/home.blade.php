@@ -80,67 +80,34 @@
                         </tr>
                         </thead>
                         <tbody>
-                         @php
-                                    $products = [
-                                        ['T-Shirt', 'Clothing', 'Red', 'M', '2024-01-01', '44'],
-                                        ['Hoodie', 'Clothing', 'Black', 'L', '2024-01-02', '30'],
-                                        ['Sneakers', 'Footwear', 'White', '9', '2024-01-03', '25'],
-                                        ['Hat', 'Accessories', 'Blue', 'Free Size', '2024-01-04', '12'],
-                                        ['Jacket', 'Clothing', 'Green', 'XL', '2024-01-05', '18'],
-                                        ['Cap', 'Accessories', 'Black', 'Free Size', '2024-01-06', '20'],
-                                        ['Sandals', 'Footwear', 'Brown', '8', '2024-01-07', '15'],
-                                        ['Scarf', 'Accessories', 'Pink', 'Free Size', '2024-01-08', '10'],
-                                        ['Shorts', 'Clothing', 'Blue', 'M', '2024-01-09', '33'],
-                                        ['Jeans', 'Clothing', 'Denim', 'L', '2024-01-10', '27'],
-                                        ['Gloves', 'Accessories', 'Black', 'M', '2024-01-11', '8'],
-                                        ['Boots', 'Footwear', 'Black', '10', '2024-01-12', '13'],
-                                    ];
-                                    $perPage = 10;
-                                    $currentPage = request()->get('page', 1);
-                                    $offset = ($currentPage - 1) * $perPage;
-                                    $paginatedProducts = array_slice($products, $offset, $perPage);
-                                    $totalPages = ceil(count($products) / $perPage);
-                                @endphp
-                        @foreach ($paginatedProducts as $index => $product)
-                                    <tr>
-                                        <td>{{ $product[0] }}</td>
-                                        <td>{{ $product[1] }}</td>
-                                        <td>{{ $product[2] }}</td>
-                                        <td>{{ $product[3] }}</td>
-                                        <td>{{ $product[4] }}</td>
-                                        <td>{{ $product[5] }}</td>
-                                        <td>
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#editProductModal" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                                            <a href="{{ url('/product/delete/' . ($offset + $index)) }}" class="text-danger ms-2" onclick="return confirm('Are you sure you want to delete this product?')">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                            @php
+                                $paginatedProducts = $products; // From controller
+                            @endphp
+
+                            @foreach($paginatedProducts as $product)
+                                <tr>
+                                    <td>{{ $product->product_name }}</td>
+                                    <td>{{ $product->clothing_type }}</td>
+                                    <td>{{ $product->color }}</td>
+                                    <td>{{ $product->size }}</td>
+                                    <td>{{ $product->date }}</td>
+                                    <td>{{ $product->quantity }}</td>
+                                    <td>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#editProductModal" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ url('/product/delete/' . $product->product_id) }}" class="text-danger ms-2" onclick="return confirm('Are you sure you want to delete this product?')">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
 
 
-                <nav>
-                        <ul class="pagination justify-content-center mt-3">
-                            <li class="page-item {{ $currentPage == 1 ? 'disabled' : '' }}">
-                                <a class="page-link" href="?page={{ $currentPage - 1 }}">&lt;</a>
-                            </li>
-
-
-                            @for ($i = 1; $i <= $totalPages; $i++)
-                                <li class="page-item {{ $currentPage == $i ? 'active' : '' }}">
-                                    <a class="page-link" href="?page={{ $i }}">{{ $i }}</a>
-                                </li>
-                            @endfor
-
-
-                            <li class="page-item {{ $currentPage == $totalPages ? 'disabled' : '' }}">
-                                <a class="page-link" href="?page={{ $currentPage + 1 }}">&gt;</a>
-                            </li>
-                        </ul>
-                    </nav>
+                <nav class="mt-3">
+                    {{ $products->links('pagination::bootstrap-5') }}
+                </nav>
             </div>
         </div>
     </main>
