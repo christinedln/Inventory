@@ -1,0 +1,36 @@
+/* resources/css/style.css */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f7fc;
+}
+.sidebar {
+    height: 100vh;
+    background-color: #f8f9fa;
+    padding: 1rem;
+}
+.sidebar .nav-link.active {
+    background-color: #0d6efd;
+    color: #fff !important;
+    border-radius: 8px;
+}
+.sidebar .nav-link {
+    color: #333;
+    font-weight: 500;
+}
+.product-img {
+    width: 50px;
+    height: auto;
+}
+.content {
+    padding: 2rem;
+}
+.table td, .table th {
+    vertical-align: middle;
+}
+.action-icons a {
+    margin: 0 5px;
+    color: #0d6efd;
+}
+.action-icons a.delete {
+    color: #dc3545;
+}
