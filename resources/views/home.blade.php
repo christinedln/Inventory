@@ -110,7 +110,7 @@
                                         <td>{{ $product[4] }}</td>
                                         <td>{{ $product[5] }}</td>
                                         <td>
-                                            <a href="{{ url('/product/edit/' . ($offset + $index)) }}" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#editProductModal" title="Edit"><i class="bi bi-pencil-square"></i></a>
                                             <a href="{{ url('/product/delete/' . ($offset + $index)) }}" class="text-danger ms-2" onclick="return confirm('Are you sure you want to delete this product?')">
                                                 <i class="bi bi-trash"></i>
                                             </a>
@@ -146,22 +146,23 @@
     </main>
     <!-- Add Product Modal -->
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg"><!-- wider modal -->
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form method="POST" action="{{ route('products.store') }}">
+                    @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="productName" class="form-label">Product Name</label>
-                            <input type="text" class="form-control" id="productName">
+                            <input type="text" name="product_name" class="form-control" id="productName">
                         </div>
                         <div class="col-md-6">
-                            <label for="clothing type" class="form-label">Clothing Type</label>
-                            <select class="form-select" id="category">
+                            <label for="category" class="form-label">Clothing Type</label>
+                            <select class="form-select" name="clothing_type" id="category">
                                 <option value="" selected disabled>Select clothing type</option>
                                 <option value="Shirts">Shirts</option>
                                 <option value="Sweaters">Sweaters</option>
@@ -178,11 +179,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="color" class="form-label">Color</label>
-                            <input type="text" class="form-control" id="color">
+                            <input type="text" name="color" class="form-control" id="color">
                         </div>
                         <div class="col-md-6">
                             <label for="size" class="form-label">Size</label>
-                            <select class="form-select" id="size">
+                            <select class="form-select" name="size" id="size">
                                 <option value="" selected disabled>Select size</option>
                                 <option value="XS">XS</option>
                                 <option value="S">S</option>
@@ -198,11 +199,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="date" class="form-label">Date</label>
-                            <input type="date" class="form-control" id="date">
+                            <input type="date" name="date" class="form-control" id="date">
                         </div>
                         <div class="col-md-6">
                             <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="quantity">
+                            <input type="number" name="quantity" class="form-control" id="quantity">
                         </div>
                     </div>
 
@@ -210,6 +211,79 @@
                         <button type="submit" class="btn btn-primary">Save Product</button>
                     </div>
                 </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('products.store') }}">
+                    @csrf
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="productName" class="form-label">Product Name</label>
+                            <input type="text" name="product_name" class="form-control" id="productName">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="category" class="form-label">Clothing Type</label>
+                            <select class="form-select" name="clothing_type" id="category">
+                                <option value="" selected disabled>Select clothing type</option>
+                                <option value="Shirts">Shirts</option>
+                                <option value="Sweaters">Sweaters</option>
+                                <option value="Hoodies">Hoodies</option>
+                                <option value="Pants">Pants</option>
+                                <option value="Skirts">Skirts</option>
+                                <option value="Trousers">Trousers</option>
+                                <option value="Shorts">Shorts</option>
+                                <option value="Dresses">Dresses</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="color" class="form-label">Color</label>
+                            <input type="text" name="color" class="form-control" id="color">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="size" class="form-label">Size</label>
+                            <select class="form-select" name="size" id="size">
+                                <option value="" selected disabled>Select size</option>
+                                <option value="XS">XS</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                                <option value="Free Size">Free Size</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" name="date" class="form-control" id="date">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" name="quantity" class="form-control" id="quantity">
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">Save Product</button>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>
