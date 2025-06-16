@@ -8,11 +8,11 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
+
     public function index()
     {
-        $perPage = 10;
-        $products = DB::table('products')->paginate($perPage);
-        return view('home', compact('products')); 
+        $products = Product::paginate(10); 
+        return view('home', compact('products'));
     }
 
     public function store(Request $request)
@@ -29,5 +29,13 @@ class ProductController extends Controller
         Product::create($validated);
 
         return redirect('/')->with('success', 'Product added successfully!');
+    }
+
+    // Delete function for PostgreSQL
+    public function delete($id)
+    {
+        DB::table('products')->where('product_id', $id)->delete();
+
+        return redirect()->back()->with('success', 'Product deleted successfully!');
     }
 }

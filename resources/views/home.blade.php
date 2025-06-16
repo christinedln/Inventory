@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory</title>
-    @vite(['resources/css/home.css']) 
+    @vite(['resources/css/home.css'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-
+    
 <!-- Header with toggle on small screens -->
 <nav class="navbar navbar-light bg-light d-md-none">
     <div class="container-fluid">
@@ -20,10 +20,8 @@
     </div>
 </nav>
 
-
 <div class="container-fluid">
     <div class="row">
-
 
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
@@ -35,7 +33,6 @@
                 <li><a href="#" class="nav-link"><i class="bi bi-truck me-2"></i>Suppliers</a></li>
             </ul>
         </div>
-
 
         <!-- Offcanvas for small screens -->
         <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
@@ -80,11 +77,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $paginatedProducts = $products; // From controller
-                            @endphp
 
-                            @foreach($paginatedProducts as $product)
+                            @foreach ($products as $product)
                                 <tr>
                                     <td>{{ $product->product_name }}</td>
                                     <td>{{ $product->clothing_type }}</td>
@@ -94,16 +88,16 @@
                                     <td>{{ $product->quantity }}</td>
                                     <td>
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#editProductModal" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                                        <a href="{{ url('/product/delete/' . $product->product_id) }}" class="text-danger ms-2" onclick="return confirm('Are you sure you want to delete this product?')">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        <a href="{{ url('/product/delete/' . $product->product_id) }}" 
+                                        class="text-danger ms-2" 
+                                        onclick="return confirm('Are you sure you want to delete this product?')">
+                                        <i class="bi bi-trash"></i>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-
 
                 <nav class="mt-3">
                     {{ $products->links('pagination::bootstrap-5') }}
@@ -256,15 +250,8 @@
     </div>
 </div>
 
-
 </div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-
-
-
