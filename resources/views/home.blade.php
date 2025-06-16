@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-    
+
 <!-- Header with toggle on small screens -->
 <nav class="navbar navbar-light bg-light d-md-none">
     <div class="container-fluid">
@@ -122,8 +122,8 @@
                             <input type="text" name="product_name" class="form-control" id="productName">
                         </div>
                         <div class="col-md-6">
-                            <label for="category" class="form-label">Clothing Type</label>
-                            <select class="form-select" name="clothing_type" id="category">
+                            <label for="clothing_type" class="form-label">Clothing Type</label>
+                            <select class="form-select" name="clothing_type" id="clothing_type">
                                 <option value="" selected disabled>Select clothing type</option>
                                 <option value="Shirts">Shirts</option>
                                 <option value="Sweaters">Sweaters</option>
@@ -162,6 +162,10 @@
                             <label for="date" class="form-label">Date</label>
                             <input type="date" name="date" class="form-control" id="date">
                         </div>
+                        <script>
+                            const today = new Date().toISOString().split('T')[0];
+                            document.getElementById('date').setAttribute('max', today);
+                        </script>
                         <div class="col-md-6">
                             <label for="quantity" class="form-label">Quantity</label>
                             <input type="number" name="quantity" class="form-control" id="quantity">
@@ -190,12 +194,12 @@
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="productName" class="form-label">Product Name</label>
-                            <input type="text" name="product_name" class="form-control" id="productName">
+                            <label for="edit-productName" class="form-label">Product Name</label>
+                            <input type="text" name="product_name" class="form-control" id="edit-productName">
                         </div>
                         <div class="col-md-6">
-                            <label for="category" class="form-label">Clothing Type</label>
-                            <select class="form-select" name="clothing_type" id="category">
+                            <label for="edit-clothing_type" class="form-label">Clothing Type</label>
+                            <select class="form-select" name="clothing_type" id="edit-clothing_type">
                                 <option value="" selected disabled>Select clothing type</option>
                                 <option value="Shirts">Shirts</option>
                                 <option value="Sweaters">Sweaters</option>
@@ -211,12 +215,12 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="color" class="form-label">Color</label>
-                            <input type="text" name="color" class="form-control" id="color">
+                            <label for="edit-color" class="form-label">Color</label>
+                            <input type="text" name="color" class="form-control" id="edit-color">
                         </div>
                         <div class="col-md-6">
-                            <label for="size" class="form-label">Size</label>
-                            <select class="form-select" name="size" id="size">
+                            <label for="edit-size" class="form-label">Size</label>
+                            <select class="form-select" name="size" id="edit-size">
                                 <option value="" selected disabled>Select size</option>
                                 <option value="XS">XS</option>
                                 <option value="S">S</option>
@@ -231,12 +235,21 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="date" class="form-label">Date</label>
-                            <input type="date" name="date" class="form-control" id="date">
+                            <label for="edit-date" class="form-label">Date</label>
+                            <input type="date" name="date" class="form-control" id="edit-date">
                         </div>
+                        <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    const today = new Date().toISOString().split('T')[0];
+                                    const editDate = document.getElementById('edit-date');
+                                    if (editDate) {
+                                        editDate.setAttribute('max', today);
+                                    }
+                                });
+                            </script>
                         <div class="col-md-6">
-                            <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" name="quantity" class="form-control" id="quantity">
+                            <label for="edit-quantity" class="form-label">Quantity</label>
+                            <input type="number" name="quantity" class="form-control" id="edit-quantity">
                         </div>
                     </div>
 

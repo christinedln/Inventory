@@ -31,7 +31,6 @@ class ProductController extends Controller
         return redirect('/')->with('success', 'Product added successfully!');
     }
 
-    // Delete function for PostgreSQL
     public function delete($id)
     {
         DB::table('products')->where('product_id', $id)->delete();
