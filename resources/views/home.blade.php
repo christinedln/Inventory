@@ -80,16 +80,27 @@
 
                             @foreach ($products as $product)
                                 <tr>
-                                    <td>{{ $product->product_name }}</td>
-                                    <td>{{ $product->clothing_type }}</td>
+                                    <td>{{ $product->name }}</td>
+                                    <td>{{ $product->category }}</td>
                                     <td>{{ $product->color }}</td>
                                     <td>{{ $product->size }}</td>
                                     <td>{{ $product->date }}</td>
                                     <td>{{ $product->quantity }}</td>
                                     <td>
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#editProductModal" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                                        <a href="{{ url('/product/delete/' . $product->product_id) }}" 
-                                        class="text-danger ms-2" 
+                                        <a href="#"
+                                           data-bs-toggle="modal"
+                                           data-bs-target="#editProductModal"
+                                           data-id="{{ $product->id }}"
+                                           data-name="{{ $product->name }}"
+                                           data-category="{{ $product->category }}"
+                                           data-color="{{ $product->color }}"
+                                           data-size="{{ $product->size }}"
+                                           data-date="{{ $product->date }}"
+                                           data-quantity="{{ $product->quantity }}"
+                                           class="edit-product"
+                                           title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                        <a href="{{ url('/product/delete/' . $product->product_id) }}"
+                                        class="text-danger ms-2"
                                         onclick="return confirm('Are you sure you want to delete this product?')">
                                         <i class="bi bi-trash"></i>
                                     </td>
@@ -99,9 +110,7 @@
                     </table>
                 </div>
 
-                <nav class="mt-3">
-                    {{ $products->links('pagination::bootstrap-5') }}
-                </nav>
+                {{-- Pagination links removed because $products is not a paginator --}}
             </div>
         </div>
     </main>
@@ -114,6 +123,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 <form method="POST" action="{{ route('products.store') }}">
                     @csrf
                     <div class="row mb-3">
@@ -190,7 +213,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" action="{{ route('products.store') }}">
+                <form method="POST" id="editForm" action="">
+                    @method('POST')
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -266,5 +290,39 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all edit buttons
+            const editButtons = document.querySelectorAll('.edit-product');
+
+            // Add click event listener to each edit button
+            editButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Get data from button attributes
+                    const id = this.dataset.id;
+                    const name = this.dataset.name;
+                    const category = this.dataset.category;
+                    const color = this.dataset.color;
+                    const size = this.dataset.size;
+                    const date = this.dataset.date;
+                    const quantity = this.dataset.quantity;
+
+                    // Set form action URL
+                    const form = document.getElementById('editForm');
+                    form.action = `/product/update/${id}`;
+
+                    // Populate form fields
+                    document.getElementById('edit-productName').value = name;
+                    document.getElementById('edit-clothing_type').value = category;
+                    document.getElementById('edit-color').value = color;
+                    document.getElementById('edit-size').value = size;
+                    document.getElementById('edit-date').value = date;
+                    document.getElementById('edit-quantity').value = quantity;
+                });
+            });
+        });
+    </script>
 </body>
 </html>
