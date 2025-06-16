@@ -119,11 +119,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="productName" class="form-label">Product Name</label>
-                            <input type="text" name="product_name" class="form-control" id="productName">
+                            <input type="text" name="product_name" class="form-control" id="productName" required>
                         </div>
                         <div class="col-md-6">
                             <label for="clothing_type" class="form-label">Clothing Type</label>
-                            <select class="form-select" name="clothing_type" id="clothing_type">
+                            <select class="form-select" name="clothing_type" id="clothing_type" required>
                                 <option value="" selected disabled>Select clothing type</option>
                                 <option value="Shirts">Shirts</option>
                                 <option value="Sweaters">Sweaters</option>
@@ -140,11 +140,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="color" class="form-label">Color</label>
-                            <input type="text" name="color" class="form-control" id="color">
+                            <input type="text" name="color" class="form-control" id="color" required>
                         </div>
                         <div class="col-md-6">
                             <label for="size" class="form-label">Size</label>
-                            <select class="form-select" name="size" id="size">
+                            <select class="form-select" name="size" id="size" required>
                                 <option value="" selected disabled>Select size</option>
                                 <option value="XS">XS</option>
                                 <option value="S">S</option>
@@ -160,7 +160,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="date" class="form-label">Date</label>
-                            <input type="date" name="date" class="form-control" id="date">
+                            <input type="date" name="date" class="form-control" id="date" required>
                         </div>
                         <script>
                             const today = new Date().toISOString().split('T')[0];
@@ -168,7 +168,7 @@
                         </script>
                         <div class="col-md-6">
                             <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" name="quantity" class="form-control" id="quantity">
+                            <input type="number" name="quantity" class="form-control" id="quantity" required>
                         </div>
                     </div>
 
@@ -195,11 +195,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="edit-productName" class="form-label">Product Name</label>
-                            <input type="text" name="product_name" class="form-control" id="edit-productName">
+                            <input type="text" name="product_name" class="form-control" id="edit-productName" required>
                         </div>
                         <div class="col-md-6">
                             <label for="edit-clothing_type" class="form-label">Clothing Type</label>
-                            <select class="form-select" name="clothing_type" id="edit-clothing_type">
+                            <select class="form-select" name="clothing_type" id="edit-clothing_type" required>
                                 <option value="" selected disabled>Select clothing type</option>
                                 <option value="Shirts">Shirts</option>
                                 <option value="Sweaters">Sweaters</option>
@@ -216,11 +216,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="edit-color" class="form-label">Color</label>
-                            <input type="text" name="color" class="form-control" id="edit-color">
+                            <input type="text" name="color" class="form-control" id="edit-color" required>
                         </div>
                         <div class="col-md-6">
                             <label for="edit-size" class="form-label">Size</label>
-                            <select class="form-select" name="size" id="edit-size">
+                            <select class="form-select" name="size" id="edit-size" required>
                                 <option value="" selected disabled>Select size</option>
                                 <option value="XS">XS</option>
                                 <option value="S">S</option>
@@ -236,7 +236,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="edit-date" class="form-label">Date</label>
-                            <input type="date" name="date" class="form-control" id="edit-date">
+                            <input type="date" name="date" class="form-control" id="edit-date" required>
                         </div>
                         <script>
                                 document.addEventListener("DOMContentLoaded", function () {
@@ -249,7 +249,7 @@
                             </script>
                         <div class="col-md-6">
                             <label for="edit-quantity" class="form-label">Quantity</label>
-                            <input type="number" name="quantity" class="form-control" id="edit-quantity">
+                            <input type="number" name="quantity" class="form-control" id="edit-quantity" required>
                         </div>
                     </div>
 
