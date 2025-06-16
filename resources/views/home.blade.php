@@ -78,43 +78,47 @@
                         </thead>
                         <tbody>
 
-                            @foreach ($products as $product)
-                                <tr>
-                                    <td>{{ $product->name }}</td>
-                                    <td>{{ $product->category }}</td>
-                                    <td>{{ $product->color }}</td>
-                                    <td>{{ $product->size }}</td>
-                                    <td>{{ $product->date }}</td>
-                                    <td>{{ $product->quantity }}</td>
-                                    <td>
-                                        <a href="#"
-                                           data-bs-toggle="modal"
-                                           data-bs-target="#editProductModal"
-                                           data-id="{{ $product->id }}"
-                                           data-name="{{ $product->name }}"
-                                           data-category="{{ $product->category }}"
-                                           data-color="{{ $product->color }}"
-                                           data-size="{{ $product->size }}"
-                                           data-date="{{ $product->date }}"
-                                           data-quantity="{{ $product->quantity }}"
-                                           class="edit-product"
-                                           title="Edit"><i class="bi bi-pencil-square"></i></a>
-                                        <a href="{{ url('/product/delete/' . $product->product_id) }}"
-                                        class="text-danger ms-2"
-                                        onclick="return confirm('Are you sure you want to delete this product?')">
-                                        <i class="bi bi-trash"></i>
-                                    </td>
-                                </tr>
-                            @endforeach
+                         @foreach ($products as $product)
+                    <tr>
+                        <td>{{ $product->product_name }}</td>
+                        <td>{{ $product->clothing_type }}</td>
+                        <td>{{ $product->color }}</td>
+                        <td>{{ $product->size }}</td>
+                        <td>{{ $product->date }}</td>
+                        <td>{{ $product->quantity }}</td>
+                        <td>
+                            <a href="#" 
+                            class="edit-product"
+                            data-id="{{ $product->product_id }}"
+                            data-product_name="{{ e($product->product_name) }}"
+                            data-clothing_type="{{ $product->clothing_type }}"
+                            data-color="{{ $product->color }}"
+                            data-size="{{ $product->size }}"
+                            data-date="{{ $product->date }}"
+                            data-quantity="{{ $product->quantity }}"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#editProductModal"
+                            title="Edit"><i class="bi bi-pencil-square"></i></a>
+                            
+                            <a href="{{ url('/product/delete/' . $product->product_id) }}" 
+                            class="text-danger ms-2" 
+                            onclick="return confirm('Are you sure you want to delete this product?')">
+                            <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+
                         </tbody>
                     </table>
                 </div>
 
-                {{-- Pagination links removed because $products is not a paginator --}}
+                <nav class="mt-3">
+                    {{ $products->links('pagination::bootstrap-5') }}
+                </nav>
             </div>
         </div>
     </main>
-    <!-- Add Product Modal -->
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -123,20 +127,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                @if ($errors->any())
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-                @if(session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
                 <form method="POST" action="{{ route('products.store') }}">
                     @csrf
                     <div class="row mb-3">
@@ -292,30 +282,25 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get all edit buttons
             const editButtons = document.querySelectorAll('.edit-product');
 
-            // Add click event listener to each edit button
             editButtons.forEach(button => {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
 
-                    // Get data from button attributes
                     const id = this.dataset.id;
-                    const name = this.dataset.name;
-                    const category = this.dataset.category;
+                    const product_name = this.dataset.product_name;
+                    const clothing_type = this.dataset.clothing_type;
                     const color = this.dataset.color;
                     const size = this.dataset.size;
                     const date = this.dataset.date;
                     const quantity = this.dataset.quantity;
 
-                    // Set form action URL
                     const form = document.getElementById('editForm');
                     form.action = `/product/update/${id}`;
 
-                    // Populate form fields
-                    document.getElementById('edit-productName').value = name;
-                    document.getElementById('edit-clothing_type').value = category;
+                    document.getElementById('edit-productName').value = product_name;
+                    document.getElementById('edit-clothing_type').value = clothing_type;
                     document.getElementById('edit-color').value = color;
                     document.getElementById('edit-size').value = size;
                     document.getElementById('edit-date').value = date;
@@ -324,5 +309,6 @@
             });
         });
     </script>
+
 </body>
 </html>

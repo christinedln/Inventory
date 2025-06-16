@@ -7,10 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'name', 'category', 'color', 'size', 'date', 'quantity'
+        'product_name', 'clothing_type', 'color', 'size', 'date', 'quantity',
     ];
-    
-    protected $casts = [
-        'date' => 'date'
-    ];
+    protected $primaryKey = 'product_id';
+    public $timestamps = false;
 }
