@@ -7,7 +7,7 @@
     @vite(['resources/css/dashboard.css'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -50,7 +50,364 @@
                 </ul>
             </div>
         </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9 col-lg-10 ms-sm-auto px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dashboard</h1>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card bg-primary text-white h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Products</h5>
+                            <p class="card-text display-6">{{ $totalProducts }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card bg-warning text-dark h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Low Stock Alert</h5>
+                            <p class="card-text display-6">{{ $lowStockCount }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card bg-success text-white h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Stock Value</h5>
+                            <p class="card-text display-6">{{ $stockLevels->sum('quantity') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 mb-3">
+                    <div class="card bg-info text-white h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Categories</h5>
+                            <p class="card-text display-6">{{ $productsByCategory->count() }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Products by Category
+                        </div>
+                        <div class="card-body">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Stock Levels
+                        </div>
+                        <div class="card-body">
+                            <canvas id="stockChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Charts -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Monthly Stock Trends
+                        </div>
+                        <div class="card-body">
+                            <canvas id="stockTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Top Performing Products
+                        </div>
+                        <div class="card-body">
+                            <canvas id="topPerformersChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Size Stock Monitoring -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Stock Levels by Size
+                        </div>
+                        <div class="card-body">
+                            <canvas id="sizeStockChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Critical Stock by Size</span>
+                            <span class="badge bg-danger">Less than 5 items</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Size</th>
+                                            <th>Product</th>
+                                            <th>Category</th>
+                                            <th>Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($criticalStockBySize as $size => $products)
+                                            @foreach($products as $product)
+                                                <tr>
+                                                    <td><span class="badge bg-secondary">{{ $size }}</span></td>
+                                                    <td>{{ $product->product_name }}</td>
+                                                    <td>{{ $product->clothing_type }}</td>
+                                                    <td>
+                                                        <span class="badge bg-{{ $product->quantity == 0 ? 'danger' : 'warning' }}">
+                                                            {{ $product->quantity }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Low Stock Alert Table -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Low Stock Items
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Product Name</th>
+                                            <th>Category</th>
+                                            <th>Quantity</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($lowStockItems as $item)
+                                            <tr>
+                                                <td>{{ $item->product_name }}</td>
+                                                <td>{{ $item->clothing_type }}</td>
+                                                <td>{{ $item->quantity }}</td>
+                                                <td>
+                                                    @if($item->quantity == 0)
+                                                        <span class="badge bg-danger">Out of Stock</span>
+                                                    @else
+                                                        <span class="badge bg-warning">Low Stock</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Charts Initialization -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Category Pie Chart
+    const categoryData = @json($productsByCategory);
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'pie',
+        data: {
+            labels: categoryData.map(item => item.clothing_type),
+            datasets: [{
+                data: categoryData.map(item => item.count),
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Stock Levels Bar Chart
+    const stockData = @json($stockLevels);
+    new Chart(document.getElementById('stockChart'), {
+        type: 'bar',
+        data: {
+            labels: stockData.map(item => item.product_name),
+            datasets: [{
+                label: 'Stock Quantity',
+                data: stockData.map(item => item.quantity),
+                backgroundColor: '#36A2EB'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Monthly Stock Trends Line Chart
+    const stockTrendData = @json($monthlyStockTrends);
+    new Chart(document.getElementById('stockTrendChart'), {
+        type: 'line',
+        data: {
+            labels: stockTrendData.map(item => {
+                const date = new Date(item.month);
+                return date.toLocaleDateString('default', { month: 'short', year: 'numeric' });
+            }),
+            datasets: [{
+                label: 'Total Stock',
+                data: stockTrendData.map(item => item.total_quantity),
+                borderColor: '#4BC0C0',
+                tension: 0.1,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Top Performers Horizontal Bar Chart
+    const topPerformersData = @json($topPerformers);
+    new Chart(document.getElementById('topPerformersChart'), {
+        type: 'bar',
+        data: {
+            labels: topPerformersData.map(item => item.product_name),
+            datasets: [{
+                label: 'Stock Quantity',
+                data: topPerformersData.map(item => item.quantity),
+                backgroundColor: '#FF6384',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Stock Levels by Size Bar Chart
+    const sizeStockData = @json($stockBySize);
+    new Chart(document.getElementById('sizeStockChart'), {
+        type: 'bar',
+        data: {
+            labels: sizeStockData.map(item => item.size),
+            datasets: [{
+                label: 'Total Stock',
+                data: sizeStockData.map(item => item.total_quantity),
+                backgroundColor: sizeStockData.map(item => {
+                    const qty = item.total_quantity;
+                    if (qty < 5) return '#dc3545'; // Danger red
+                    if (qty < 10) return '#ffc107'; // Warning yellow
+                    return '#0d6efd'; // Primary blue
+                }),
+                borderColor: '#dee2e6',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                title: {
+                    display: true,
+                    text: 'Stock Quantity by Size'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Stock: ${context.parsed.y} items`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Items'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Size'
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 </body>
 </html>
