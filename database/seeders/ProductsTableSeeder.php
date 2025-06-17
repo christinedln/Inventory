@@ -13,7 +13,7 @@ class ProductsTableSeeder extends Seeder
         DB::table('products')->insert([
             [
                 'product_name' => 'Aria',
-                'clothing_type' => 'Shirt',
+                'clothing_type' => 'Shirts',
                 'color' => 'White',
                 'size' => 'M',
                 'quantity' => 25,
@@ -33,7 +33,7 @@ class ProductsTableSeeder extends Seeder
             ],
             [
                 'product_name' => 'Layla',
-                'clothing_type' => 'Jacket',
+                'clothing_type' => 'Hoodies',
                 'color' => 'Black',
                 'size' => 'L',
                 'quantity' => 45,

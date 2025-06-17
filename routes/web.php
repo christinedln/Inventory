@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SalesReportController; 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
 
@@ -28,3 +29,5 @@ Route::post('/product/update/{id}', [ProductController::class, 'update'])->name(
 
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
 Route::post('/notifications/{id}/resolve', [NotificationController::class, 'resolve'])->name('notifications.resolve');
+
+Route::get('/salesreport', [SalesReportController::class, 'index'])->name('salesreport');
