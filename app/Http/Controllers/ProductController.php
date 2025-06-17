@@ -12,12 +12,14 @@ use App\Models\Product;
 class ProductController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-         $products = Product::orderBy('product_id', 'desc')->paginate(10);
-        return view('inventory', compact('products'));
-    }
+        $highlightId = session('highlight_id'); 
 
+        $products = Product::orderBy('product_id', 'desc')->paginate(10);
+
+        return view('inventory', compact('products', 'highlightId'));
+    }
 
     public function store(Request $request)
     {
@@ -26,8 +28,8 @@ class ProductController extends Controller
             'clothing_type' => 'required|string',
             'color' => 'required|string',
             'size' => 'required|string',
-            'date' => 'required|date',
             'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
         ]);
 
 
@@ -53,8 +55,8 @@ class ProductController extends Controller
             'clothing_type' => 'required|string',
             'color' => 'required|string',
             'size' => 'required|string',
-            'date' => 'required|date',
             'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
         ]);
 
         $data = [
@@ -62,12 +64,24 @@ class ProductController extends Controller
             'clothing_type' => $validated['clothing_type'],
             'color' => $validated['color'],
             'size' => $validated['size'],
-            'date' => $validated['date'],
             'quantity' => $validated['quantity'],
+            'price' => $validated['price'],
         ];
 
         $product = Product::findOrFail($id);
         $product->update($data);
+
+            
+        if ($product->quantity < 10) {
+            DB::table('notifications')->updateOrInsert(
+                ['notification' => "{$product->product_name} is low on stock"],
+                [
+                    'type' => 'warning',
+                    'category' => 'inventory',
+                    'notifiable_id' => $product->product_id,
+                ]
+            );
+    }
 
         return redirect('inventory')->with('success', 'Product updated successfully!');
     }

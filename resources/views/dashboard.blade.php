@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cuffed</title>
     @vite(['resources/css/dashboard.css'])
+    @vite(['resources/js/dashboard.js'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -45,8 +46,8 @@
                 <ul class="nav flex-column">
                     <li><a href="#" class="nav-link active">Dashboard</a></li>
                     <li><a href="{{ route('inventory') }}" class="nav-link">Inventory</a></li>
-                    <li><a href="#" class="nav-link">Sales Report</a></li>
-                    <li><a href="#" class="nav-link">Notification</a></li>
+                    <li><a href="{{ route('salesreport') }}" class="nav-link">Sales Report</a></li>
+                    <li><a href="{{ route('notification') }}" class="nav-link">Notification</a></li>
                 </ul>
             </div>
         </div>
