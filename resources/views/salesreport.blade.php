@@ -34,7 +34,9 @@
         <li><a href="{{ route('dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
         <li><a href="{{ route('inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
         <li><a href="{{ route('salesreport') }}" class="nav-link active"><i class="bi bi-clipboard-data me-2"></i>Sales Report</a></li>
-        <li><a href="{{ route('notification') }}" class="nav-link"><i class="bi bi-bell me-2"></i>Notification</a></li>
+         <li><a href="{{ route('notification') }}" class="nav-link"><i class="bi bi-bell me-2"></i>Notification @if($unresolvedCount > 0)
+            <span class="badge bg-danger">{{ $unresolvedCount }}</span>
+        @endif </a></li>
       </ul>
     </div>
 
@@ -120,7 +122,9 @@
       <li><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
       <li><a href="{{ route('inventory') }}" class="nav-link">Inventory</a></li>
       <li><a href="{{ route('salesreport') }}" class="nav-link active">Sales Report</a></li>
-      <li><a href="{{ route('notification') }}" class="nav-link">Notification</a></li>
+      <li><a href="{{ route('notification') }}" class="nav-link">Notification @if($unresolvedCount > 0)
+            <span class="badge bg-danger">{{ $unresolvedCount }}</span>
+        @endif </a></li>
     </ul>
   </div>
 </div>

@@ -48,6 +48,7 @@ class ProductController extends Controller
 
         return redirect()->back()->with('success', 'Product deleted successfully!');
     }
+    
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
@@ -73,15 +74,26 @@ class ProductController extends Controller
 
             
         if ($product->quantity < 10) {
-            DB::table('notifications')->updateOrInsert(
-                ['notification' => "{$product->product_name} is low on stock"],
-                [
-                    'type' => 'warning',
-                    'category' => 'inventory',
-                    'notifiable_id' => $product->product_id,
-                ]
-            );
-    }
+            $latestNotification = DB::table('notifications')
+                ->where('notification', "{$product->product_name} is low on stock")
+                ->where('notifiable_id', $product->product_id)
+                ->where('category', 'inventory')
+                ->orderByDesc('created_at')
+                ->first();
+
+            if (!$latestNotification || $latestNotification->status === 'resolved') {
+                DB::table('notifications')->insert([
+                    'notification'   => "{$product->product_name} is low on stock",
+                    'type'           => 'warning',
+                    'category'       => 'inventory',
+                    'notifiable_id'  => $product->product_id,
+                    'status'         => 'unresolved',
+                    'created_at'     => now(),
+                    'updated_at'     => now(),
+                ]);
+            }
+        }
+
 
         return redirect('inventory')->with('success', 'Product updated successfully!');
     }

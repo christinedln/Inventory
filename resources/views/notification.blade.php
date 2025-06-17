@@ -32,7 +32,9 @@
                 <li><a href="{{ route('dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
                 <li><a href="{{ route('inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
                 <li><a href="{{ route('salesreport') }}" class="nav-link"><i class="bi bi-clipboard-data me-2"></i>Sales Report</a></li>
-                <li><a href="#" class="nav-link active"><i class="bi bi-bell me-2"></i>Notification</a></li>
+                <li><a href="#" class="nav-link active"><i class="bi bi-bell me-2"></i>Notification @if($unresolvedCount > 0)
+            <span class="badge bg-danger">{{ $unresolvedCount }}</span>
+        @endif</a></li>
             </ul>
         </div>
 
@@ -47,7 +49,9 @@
                     <li><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
                     <li><a href="{{ route('inventory') }}" class="nav-link">Inventory</a></li>
                     <li><a href="{{ route('salesreport') }}" class="nav-link">Sales Report</a></li>
-                    <li><a href="#" class="nav-link active">Notification</a></li>
+                    <li><a href="#" class="nav-link active">Notification @if($unresolvedCount > 0)
+            <span class="badge bg-danger">{{ $unresolvedCount }}</span>
+        @endif</a></li>
                 </ul>
             </div>
         </div>
@@ -71,38 +75,57 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $products = [
-                                    ['Stock low: T-Shirt (Size M)', '2 minutes ago', 'Restock'],
-                                    ['New product added: Hoodie', '10 minutes ago', 'View'],
-                                ];
-                            @endphp
-
                         @foreach ($notifications as $notification)
-                        <tr>
+                        <tr class="{{ $notification->status === 'unresolved' ? 'table-primary' : '' }}">
+
                             <td>
                                 @if($notification->type === 'warning')
                                     <i class="bi bi-exclamation-triangle-fill text-warning me-1"></i>
                                 @endif
                                 {{ $notification->notification }}
                             </td>
-                            <td>{{ $notification->created_at }}</td>
-                              <td>
+                           <td>
+                                @if($notification->status === 'resolved' && $notification->updated_at && $notification->updated_at != $notification->created_at)
+                                    Resolved at {{ $notification->updated_at }}
+                                @else
+                                    {{ $notification->created_at }}
+                                @endif
+                            </td>
+                           <td>
                                 @if($notification->category === 'inventory')
-                                    <form action="{{ route('notifications.resolve', $notification->notifiable_id) }}" method="POST" style="display:inline;">
+                                <div class="d-flex flex-column flex-md-row align-items-center gap-1">
+
+                                    <form action="{{ route('notifications.resolve', $notification->notifiable_id) }}" method="POST">
                                         @csrf
-                                        <button type="submit" class="btn btn-sm btn-success">Resolve</button>
+                                        <button type="submit"
+                                            class="btn btn-sm {{ $notification->status === 'unresolved' ? 'btn-primary' : 'btn-outline-secondary' }}"
+                                            {{ $notification->status === 'resolved' ? 'disabled' : '' }}>
+                                            Resolve
+                                        </button>
                                     </form>
+
+                                    <form action="{{ route('notifications.toggleStatus', $notification->notification_id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit"
+                                            class="btn btn-sm {{ $notification->status === 'unresolved' ? 'btn-primary' : 'btn-outline-secondary' }}">
+                                            {{ $notification->status === 'unresolved' ? 'Mark as Resolved' : 'Mark as Unresolved' }}
+                                        </button>
+                                    </form>
+
+                                </div>
                                 @else
                                     {{ $notification->category }}
                                 @endif
-
                             </td>
+
                         </tr>
-                    @endforeach
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
+                <nav class="mt-3">
+                    {{ $notifications->links('pagination::bootstrap-5') }}
+                </nav>
             </div>
         </div>
         </div>

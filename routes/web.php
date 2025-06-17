@@ -28,6 +28,7 @@ Route::post('/product/update/{id}', [ProductController::class, 'update'])->name(
 
 Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
 Route::post('/notifications/{id}/resolve', [NotificationController::class, 'resolve'])->name('notifications.resolve');
+Route::post('/notifications/{id}/toggle-status', [NotificationController::class, 'toggleStatus'])->name('notifications.toggleStatus');
 
 Route::get('/salesreport', [SalesReportController::class, 'index'])->name('salesreport');
 

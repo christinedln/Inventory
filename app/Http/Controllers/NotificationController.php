@@ -43,4 +43,16 @@ class NotificationController extends Controller
         return redirect()->route('inventory');
     }
 
+public function toggleStatus($id)
+{
+    $notification = Notification::findOrFail($id);
+
+    $notification->status = $notification->status === 'resolved' ? 'unresolved' : 'resolved';
+    $notification->save();
+
+    return redirect()->back()->with('success', 'Notification status updated.');
+}
+
+
+
 }

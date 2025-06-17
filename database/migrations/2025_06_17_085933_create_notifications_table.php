@@ -14,7 +14,9 @@ return new class extends Migration
             $table->string('type', 50);
             $table->string('category', 50);
             $table->string('notifiable_id', 50)->nullable();
+            $table->string('status')->default('unresolved'); 
             $table->timestamp('created_at')->useCurrent(); 
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
