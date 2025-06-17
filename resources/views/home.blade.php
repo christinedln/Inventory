@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory</title>
+    <title>Cuffed</title>
     @vite(['resources/css/home.css'])
+    @vite(['resources/js/home.js'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
 <body>
 
@@ -16,7 +18,7 @@
         <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
             <i class="bi bi-list"></i>
         </button>
-        <span class="navbar-brand mb-0 h1">Inventory</span>
+        <span class="navbar-brand mb-0 h1">Cuffed</span>
     </div>
 </nav>
 
@@ -25,7 +27,7 @@
 
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
-            <h4><strong>Inventory</strong></h4>
+            <h4><strong>Cuffed</strong></h4>
             <ul class="nav flex-column">
                 <li><a href="#" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
                 <li><a href="#" class="nav-link active"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
@@ -175,10 +177,6 @@
                             <label for="date" class="form-label">Date</label>
                             <input type="date" name="date" class="form-control" id="date" required>
                         </div>
-                        <script>
-                            const today = new Date().toISOString().split('T')[0];
-                            document.getElementById('date').setAttribute('max', today);
-                        </script>
                         <div class="col-md-6">
                             <label for="quantity" class="form-label">Quantity</label>
                             <input type="number" name="quantity" class="form-control" id="quantity" required>
@@ -252,15 +250,6 @@
                             <label for="edit-date" class="form-label">Date</label>
                             <input type="date" name="date" class="form-control" id="edit-date" required>
                         </div>
-                        <script>
-                                document.addEventListener("DOMContentLoaded", function () {
-                                    const today = new Date().toISOString().split('T')[0];
-                                    const editDate = document.getElementById('edit-date');
-                                    if (editDate) {
-                                        editDate.setAttribute('max', today);
-                                    }
-                                });
-                            </script>
                         <div class="col-md-6">
                             <label for="edit-quantity" class="form-label">Quantity</label>
                             <input type="number" name="quantity" class="form-control" id="edit-quantity" required>
@@ -279,36 +268,6 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const editButtons = document.querySelectorAll('.edit-product');
-
-            editButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    const id = this.dataset.id;
-                    const product_name = this.dataset.product_name;
-                    const clothing_type = this.dataset.clothing_type;
-                    const color = this.dataset.color;
-                    const size = this.dataset.size;
-                    const date = this.dataset.date;
-                    const quantity = this.dataset.quantity;
-
-                    const form = document.getElementById('editForm');
-                    form.action = `/product/update/${id}`;
-
-                    document.getElementById('edit-productName').value = product_name;
-                    document.getElementById('edit-clothing_type').value = clothing_type;
-                    document.getElementById('edit-color').value = color;
-                    document.getElementById('edit-size').value = size;
-                    document.getElementById('edit-date').value = date;
-                    document.getElementById('edit-quantity').value = quantity;
-                });
-            });
-        });
-    </script>
 
 </body>
 </html>
