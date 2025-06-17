@@ -1,13 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\SalesReportController; 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
 
-Route::get('/', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/inventory', function () {
     return view('inventory');
@@ -31,3 +30,4 @@ Route::get('/notification', [NotificationController::class, 'index'])->name('not
 Route::post('/notifications/{id}/resolve', [NotificationController::class, 'resolve'])->name('notifications.resolve');
 
 Route::get('/salesreport', [SalesReportController::class, 'index'])->name('salesreport');
+
