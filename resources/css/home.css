@@ -1,75 +1,36 @@
-<<<<<<< HEAD
-=======
 /* resources/css/style.css */
->>>>>>> 26ee91be5d3bdd3faae181fe946f601c4647b3fa
 body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f4f7fc;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 26ee91be5d3bdd3faae181fe946f601c4647b3fa
 .sidebar {
     height: 100vh;
     background-color: #f8f9fa;
     padding: 1rem;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 26ee91be5d3bdd3faae181fe946f601c4647b3fa
 .sidebar .nav-link.active {
     background-color: #0d6efd;
     color: #fff !important;
     border-radius: 8px;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 26ee91be5d3bdd3faae181fe946f601c4647b3fa
 .sidebar .nav-link {
     color: #333;
     font-weight: 500;
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> 26ee91be5d3bdd3faae181fe946f601c4647b3fa
 .product-img {
     width: 50px;
     height: auto;
 }
-<<<<<<< HEAD
-
-.content {
-    padding: 2rem;
-}
-
-.table td, .table th {
-    vertical-align: middle;
-}
-
-=======
 .content {
     padding: 2rem;
 }
 .table td, .table th {
     vertical-align: middle;
 }
->>>>>>> 26ee91be5d3bdd3faae181fe946f601c4647b3fa
 .action-icons a {
     margin: 0 5px;
     color: #0d6efd;
 }
-<<<<<<< HEAD
-
 .action-icons a.delete {
     color: #dc3545;
 }
-
-=======
-.action-icons a.delete {
-    color: #dc3545;
-}
->>>>>>> 26ee91be5d3bdd3faae181fe946f601c4647b3fa
