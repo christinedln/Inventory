@@ -15,7 +15,7 @@ class ProductController extends Controller
     public function index()
     {
          $products = Product::orderBy('product_id', 'desc')->paginate(10);
-        return view('home', compact('products'));
+        return view('inventory', compact('products'));
     }
 
 
@@ -34,7 +34,7 @@ class ProductController extends Controller
         Product::create($validated);
 
 
-        return redirect('/')->with('success', 'Product added successfully!');
+        return redirect('inventory')->with('success', 'Product added successfully!');
     }
 
 
@@ -69,7 +69,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->update($data);
 
-        return redirect('/')->with('success', 'Product updated successfully!');
+        return redirect('inventory')->with('success', 'Product updated successfully!');
     }
 }
 

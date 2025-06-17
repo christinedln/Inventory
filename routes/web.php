@@ -4,10 +4,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
-    return view('home');
-});
+    return view('dashboard');
+})->name('dashboard');
 
-Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-Route::get('/', [ProductController::class, 'index'])->name('products.index');
+Route::get('/inventory', function () {
+    return view('inventory');
+})->name('inventory');
+
+Route::get('/salesreport', function () {
+    return view('salesreport');
+})->name('salesreport');
+
+Route::get('/notification', function () {
+    return view('notification');
+})->name('notification');
+
+Route::post('/inventory', [ProductController::class, 'store'])->name('inventory.store');
+Route::get('/inventory', [ProductController::class, 'index'])->name('inventory');
 Route::get('/product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
 Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('products.update');
