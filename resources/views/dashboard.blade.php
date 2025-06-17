@@ -270,25 +270,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Stock Levels Bar Chart
+    // Stock Levels Doughnut Chart
     const stockData = @json($stockLevels);
     new Chart(document.getElementById('stockChart'), {
-        type: 'bar',
+        type: 'doughnut',
         data: {
             labels: stockData.map(item => item.product_name),
             datasets: [{
-                label: 'Stock Quantity',
                 data: stockData.map(item => item.quantity),
-                backgroundColor: '#36A2EB'
+                backgroundColor: [
+                    '#FF6384',
+                    '#36A2EB',
+                    '#FFCE56',
+                    '#4BC0C0',
+                    '#9966FF',
+                    '#FF9F40',
+                    '#4D5360',
+                    '#46BFBD',
+                    '#949FB1',
+                    '#97BBCD'
+                ]
             }]
         },
         options: {
             responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                title: {
+                    display: true,
+                    text: 'Stock Distribution by Product'
                 }
-            }
+            },
+            cutout: '60%'
         }
     });
 
