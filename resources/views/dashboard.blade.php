@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cuffed</title>
     @vite(['resources/css/dashboard.css'])
+    @vite(['resources/js/dashboard.js'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -45,8 +46,8 @@
                 <ul class="nav flex-column">
                     <li><a href="#" class="nav-link active">Dashboard</a></li>
                     <li><a href="{{ route('inventory') }}" class="nav-link">Inventory</a></li>
-                    <li><a href="#" class="nav-link">Sales Report</a></li>
-                    <li><a href="#" class="nav-link">Notification</a></li>
+                    <li><a href="{{ route('salesreport') }}" class="nav-link">Sales Report</a></li>
+                    <li><a href="{{ route('notification') }}" class="nav-link">Notification</a></li>
                 </ul>
             </div>
         </div>
@@ -153,86 +154,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <span>Critical Stock by Size</span>
-                            <span class="badge bg-danger">Less than 5 items</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Size</th>
-                                            <th>Product</th>
-                                            <th>Category</th>
-                                            <th>Quantity</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($criticalStockBySize as $size => $products)
-                                            @foreach($products as $product)
-                                                <tr>
-                                                    <td><span class="badge bg-secondary">{{ $size }}</span></td>
-                                                    <td>{{ $product->product_name }}</td>
-                                                    <td>{{ $product->clothing_type }}</td>
-                                                    <td>
-                                                        <span class="badge bg-{{ $product->quantity == 0 ? 'danger' : 'warning' }}">
-                                                            {{ $product->quantity }}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Low Stock Alert Table -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            Low Stock Items
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Product Name</th>
-                                            <th>Category</th>
-                                            <th>Quantity</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($lowStockItems as $item)
-                                            <tr>
-                                                <td>{{ $item->product_name }}</td>
-                                                <td>{{ $item->clothing_type }}</td>
-                                                <td>{{ $item->quantity }}</td>
-                                                <td>
-                                                    @if($item->quantity == 0)
-                                                        <span class="badge bg-danger">Out of Stock</span>
-                                                    @else
-                                                        <span class="badge bg-warning">Low Stock</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="card shadow-sm mb-4">
+    <div class="card-header">
+        <h6 class="card-title mb-0">Low Stock Items</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($lowStockItems as $item)
+                        <tr>
+                            <td>{{ $item->product_name }}</td>
+                            <td>{{ $item->clothing_type }}</td>
+                            <td>{{ $item->quantity }}</td>
+                            <td>
+                                @if($item->quantity == 0)
+                                    <span class="badge bg-danger">OUT OF STOCK</span>
+                                @elseif($item->quantity <= 5)
+                                    <span class="badge bg-danger">CRITICAL STOCK</span>
+                                @else
+                                    <span class="badge bg-warning">LOW STOCK</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

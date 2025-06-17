@@ -44,10 +44,10 @@
             </div>
             <div class="offcanvas-body">
                 <ul class="nav flex-column">
-                    <li><a href="#" class="nav-link">Dashboard</a></li>
+                    <li><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
                     <li><a href="#" class="nav-link active">Inventory</a></li>
-                    <li><a href="#" class="nav-link">Sales Report</a></li>
-                    <li><a href="#" class="nav-link">Notification</a></li>
+                    <li><a href="{{ route('salesreport') }}" class="nav-link">Sales Report</a></li>
+                    <li><a href="{{ route('notification') }}" class="nav-link">Notification</a></li>
                 </ul>
             </div>
         </div>
@@ -68,26 +68,35 @@
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
-                        <tr>
+                        <tr class="text-center">
                             <th>Product Name</th>
                             <th>Clothing Type</th>
                             <th>Color</th>
                             <th>Size</th>
                             <th>Date</th>
                             <th>Quantity</th>
+                            <th>Price</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
 
                          @foreach ($products as $product)
-                    <tr>
+                    <tr class="text-center @if($highlightId == $product->product_id) table-success @endif">
                         <td>{{ $product->product_name }}</td>
                         <td>{{ $product->clothing_type }}</td>
                         <td>{{ $product->color }}</td>
                         <td>{{ $product->size }}</td>
-                        <td>{{ $product->date }}</td>
+                        <td>
+                        @if ($product->created_at == $product->updated_at)
+                          Added, {{ $product->created_at->timezone('Asia/Manila') }}
+                        @else
+                         Updated, {{ $product->updated_at->timezone('Asia/Manila')
+                        }}
+                        @endif
+                        </td>
                         <td>{{ $product->quantity }}</td>
+                        <td>₱{{ number_format($product->price, 2) }}</td>
                         <td>
                             <a href="#" 
                             class="edit-product"
@@ -96,8 +105,9 @@
                             data-clothing_type="{{ $product->clothing_type }}"
                             data-color="{{ $product->color }}"
                             data-size="{{ $product->size }}"
-                            data-date="{{ $product->date }}"
+                            data-date="{{ $product->updated_at ? $product->updated_at : '' }}"
                             data-quantity="{{ $product->quantity }}"
+                            data-price="{{ $product->price }}"
                             data-bs-toggle="modal" 
                             data-bs-target="#editProductModal"
                             title="Edit"><i class="bi bi-pencil-square"></i></a>
@@ -174,13 +184,13 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="date" class="form-label">Date</label>
-                            <input type="date" name="date" class="form-control" id="date" required>
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" name="quantity" class="form-control" id="quantity" required min="0">
                         </div>
                         <div class="col-md-6">
-                            <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" name="quantity" class="form-control" id="quantity" required>
-                        </div>
+                            <label for="price" class="form-label">Price (₱)</label>
+                            <input type="number" step="0.01" name="price" class="form-control" id="price" required min="0">
+                         </div>
                     </div>
 
                     <div class="text-end">
@@ -246,13 +256,14 @@
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="edit-date" class="form-label">Date</label>
-                            <input type="date" name="date" class="form-control" id="edit-date" required>
-                        </div>
+                
                         <div class="col-md-6">
                             <label for="edit-quantity" class="form-label">Quantity</label>
                             <input type="number" name="quantity" class="form-control" id="edit-quantity" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit-price" class="form-label">Price (₱)</label>
+                            <input type="number" step="0.01" name="price" class="form-control" id="edit-price" required>
                         </div>
                     </div>
 

@@ -1,19 +1,7 @@
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Set today's date as max for date
-    const today = new Date().toISOString().split('T')[0];
-    
-    const dateInput = document.getElementById('date');
-    if (dateInput) {
-        dateInput.setAttribute('max', today);
-    }
-
-    // Set today's date as max for edit-date
-    const editDate = document.getElementById('edit-date');
-    if (editDate) {
-        editDate.setAttribute('max', today);
-    }
+ 
 
     // Edit button functionality
     const editButtons = document.querySelectorAll('.edit-product');
@@ -26,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const clothing_type = this.dataset.clothing_type;
             const color = this.dataset.color;
             const size = this.dataset.size;
-            const date = this.dataset.date;
             const quantity = this.dataset.quantity;
+            const price = this.dataset.price;
 
             const form = document.getElementById('editForm');
             if (form) {
@@ -38,8 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('edit-clothing_type').value = clothing_type;
             document.getElementById('edit-color').value = color;
             document.getElementById('edit-size').value = size;
-            document.getElementById('edit-date').value = date;
             document.getElementById('edit-quantity').value = quantity;
+            document.getElementById('edit-price').value = price;
         });
     });
 });
