@@ -25,7 +25,7 @@ class ProductsTableSeeder extends Seeder
                 'product_name' => 'Maria',
                 'clothing_type' => 'Pants',
                 'color' => 'Blue',
-                'size' => '32',
+                'size' => 'S',
                 'quantity' => 12,
                 'price' => 799.50,
                 'created_at' => Carbon::now(),
