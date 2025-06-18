@@ -71,16 +71,14 @@
                       <td>{{ \Carbon\Carbon::parse($report->month)->format('F Y') }}</td>
                       <td>₱{{ number_format($report->total_sales_revenue, 2) }}</td>
                       <td>{{ $report->total_sales }}</td>
-                      <td>₱{{ $report->target_sales_revenue }}</td>
-                      <td>
-                        @if($report->accomplishment == 0 && $report->total_sales >= $report->target_sales_revenue)
-                          {{ number_format($report->accomplishment, 2) }}%
-                        @elseif($report->accomplishment == 0)
-                          {{ number_format($report->accomplishment, 2) }}%
-                        @elseif ($report->accomplishment > 0)
-                          <span class="text-success">▲ {{ number_format($report->accomplishment, 2) }}%</span>
+                      <td>₱{{ number_format($report->target_sales_revenue) }}</td>
+                      <td class="text-center">
+                        @if ($report->accomplishment < 100)
+                          <span class="text-danger">▼ {{ number_format($report->accomplishment, 2) }}%</span>
                         @else
-                          <span class="text-danger">▼ {{ number_format(abs($report->accomplishment), 2) }}%</span>
+                          <span class="text-success">
+                            @if ($report->accomplishment > 100)▲ @endif{{ number_format($report->accomplishment, 2) }}%
+                          </span>
                         @endif
                       </td>
                       <td>

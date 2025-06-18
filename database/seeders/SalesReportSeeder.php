@@ -62,7 +62,7 @@ class SalesReportSeeder extends Seeder
 
         foreach ($reportsData as $index => $data) {
             $accomplishment = ($data['target_sales_revenue'] > 0)
-                ? round((($data['total_sales_revenue'] / $data['target_sales_revenue']) * 100) - 100, 2)
+                ? round(($data['total_sales_revenue'] / $data['target_sales_revenue']) * 100, 2)
                 : 0;
 
             $growth_per_month = 0;
