@@ -10,56 +10,11 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Get total products and low stock count
-        $totalProducts = Product::count();
-        $lowStockCount = Product::where('quantity', '<', 10)->count();
 
-        // Monthly trends with created_at
-        $monthlyStockTrends = DB::table('products')
-            ->select(
-                DB::raw('DATE_TRUNC(\'month\', created_at) as month'),
-                'clothing_type',
-                DB::raw('SUM(quantity) as total_quantity')
-            )
-            ->whereNotNull('created_at')
-            ->groupBy('month', 'clothing_type')
-            ->orderBy('month', 'asc')
-            ->get();
+        $totalProducts = Product::count(); // Get total products
+        $lowStockCount = Product::where('quantity', '<', 10)->count(); //Count the products that has low stock
 
-        // Format data for monthly trends chart
-        $labels = $monthlyStockTrends->pluck('month')
-            ->unique()
-            ->map(function($date) {
-                return Carbon::parse($date)->format('M Y');
-            });
 
-        $datasets = [];
-        $colors = [
-            '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
-            '#9966FF', '#FF9F40', '#00CC99', '#FF99CC'
-        ];
-
-        $colorIndex = 0;
-        foreach ($monthlyStockTrends->pluck('clothing_type')->unique() as $type) {
-            $data = [];
-            foreach ($monthlyStockTrends->pluck('month')->unique() as $month) {
-                $quantity = $monthlyStockTrends
-                    ->where('month', $month)
-                    ->where('clothing_type', $type)
-                    ->sum('total_quantity');
-                $data[] = $quantity;
-            }
-
-            $datasets[] = [
-                'label' => $type,
-                'data' => $data,
-                'borderColor' => $colors[$colorIndex % count($colors)],
-                'backgroundColor' => $colors[$colorIndex % count($colors)] . '40',
-                'tension' => 0.4,
-                'fill' => true
-            ];
-            $colorIndex++;
-        }
 
         // Category distribution for pie chart
         $productsByCategory = Product::select('clothing_type', DB::raw('count(*) as count'))
@@ -79,18 +34,23 @@ class DashboardController extends Controller
         }
 
         // Stock levels by size for bar chart
-        $sizeLabels = [];
-        $sizeValues = [];
         $stockBySize = DB::table('products')
             ->select('size', DB::raw('SUM(quantity) as total_quantity'))
+            ->whereNotNull('size')  // Ensure we only count products with sizes
             ->groupBy('size')
-            ->orderBy('size')
+            ->orderBy(DB::raw('CASE
+                WHEN size = \'XS\' THEN 1
+                WHEN size = \'S\' THEN 2
+                WHEN size = \'M\' THEN 3
+                WHEN size = \'L\' THEN 4
+                WHEN size = \'XL\' THEN 5
+                WHEN size = \'XXL\' THEN 6
+                ELSE 7 END'))  // Order sizes logically
             ->get();
 
-        foreach ($stockBySize as $size) {
-            $sizeLabels[] = $size->size;
-            $sizeValues[] = $size->total_quantity;
-        }
+        // We don't need these arrays anymore as we're using $stockBySize directly in the view
+        $sizeLabels = $stockBySize->pluck('size');
+        $sizeValues = $stockBySize->pluck('total_quantity');
 
         // Get total stock value
         $totalStockValue = DB::table('products')
@@ -101,10 +61,9 @@ class DashboardController extends Controller
             ->distinct()
             ->count('clothing_type');
 
-        $stockLevels = DB::table('products')
-        ->select('product_name', 'quantity')
-        ->orderBy('quantity', 'asc')  // Show lowest stock first
-        ->get();
+        $stockLevels = Product::select('product_name', 'quantity', 'clothing_type')
+            ->orderBy('quantity', 'asc')  // Show lowest stock first
+            ->get();
 
         // Get top performing products by quantity
         $topPerformers = Product::select('product_name', 'quantity')
@@ -119,8 +78,6 @@ class DashboardController extends Controller
             ->get();
 
         return view('dashboard', compact(
-            'labels',
-            'datasets',
             'categoryLabels',
             'categoryValues',
             'sizeLabels',
@@ -132,7 +89,6 @@ class DashboardController extends Controller
             'stockLevels',
             'productsByCategory',
             'lowStockItems',
-            'monthlyStockTrends',
             'topPerformers',
             'stockBySize'
         ));

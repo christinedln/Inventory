@@ -125,16 +125,6 @@
                 <div class="col-md-6 mb-4">
                     <div class="card">
                         <div class="card-header">
-                            Monthly Stock Trends
-                        </div>
-                        <div class="card-body">
-                            <canvas id="stockTrendChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-header">
                             Top Performing Products
                         </div>
                         <div class="card-body">
@@ -142,10 +132,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- Size Stock Monitoring -->
-            <div class="row mb-4">
                 <div class="col-md-6 mb-4">
                     <div class="card">
                         <div class="card-header">
@@ -156,6 +142,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             <!-- Low Stock Alert Table -->
 <div class="card shadow-sm mb-4">
     <div class="card-header">
@@ -201,6 +188,18 @@
 <!-- Charts Initialization -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Define consistent color mapping for all charts
+    const categoryColors = {
+        'Shirts': '#FF6384',      // Pink
+        'Pants': '#36A2EB',       // Blue
+        'Dresses': '#FFCE56',     // Yellow
+        'Skirts': '#4BC0C0',      // Teal
+        'Hoodies': '#9966FF',     // Purple
+        'Sweaters': '#FF9F40',    // Orange
+        'Shorts': '#2ECC71',    // Green
+        'Trouser': '#E74C3C',       // Red
+    };
+
     // Category Pie Chart
     const categoryData = @json($productsByCategory);
     new Chart(document.getElementById('categoryChart'), {
@@ -209,13 +208,8 @@ document.addEventListener('DOMContentLoaded', function() {
             labels: categoryData.map(item => item.clothing_type),
             datasets: [{
                 data: categoryData.map(item => item.count),
-                backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                    '#9966FF'
-                ]
+                backgroundColor: categoryData.map(item => categoryColors[item.clothing_type] || '#95A5A6'),
+                borderWidth: 0
             }]
         },
         options: {
@@ -236,18 +230,8 @@ document.addEventListener('DOMContentLoaded', function() {
             labels: stockData.map(item => item.product_name),
             datasets: [{
                 data: stockData.map(item => item.quantity),
-                backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                    '#9966FF',
-                    '#FF9F40',
-                    '#4D5360',
-                    '#46BFBD',
-                    '#949FB1',
-                    '#97BBCD'
-                ]
+                backgroundColor: stockData.map(item => categoryColors[item.clothing_type] || '#95A5A6'),
+                borderWidth: 0
             }]
         },
         options: {
@@ -265,37 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Monthly Stock Trends Line Chart
-    const stockTrendData = @json($monthlyStockTrends);
-    new Chart(document.getElementById('stockTrendChart'), {
-        type: 'line',
-        data: {
-            labels: stockTrendData.map(item => {
-                const date = new Date(item.month);
-                return date.toLocaleDateString('default', { month: 'short', year: 'numeric' });
-            }),
-            datasets: [{
-                label: 'Total Stock',
-                data: stockTrendData.map(item => item.total_quantity),
-                borderColor: '#4BC0C0',
-                tension: 0.1,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
+
 
     // Top Performers Horizontal Bar Chart
     const topPerformersData = @json($topPerformers);
@@ -327,6 +281,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Stock Levels by Size Bar Chart
+    const sizeColors = {
+        'XXS': '#FF6384', // Pink
+        'XS': '#36A2EB',  // Blue
+        'S': '#FFCE56',   // Yellow
+        'M': '#4BC0C0',   // Teal
+        'L': '#9966FF',   // Purple
+        'XL': '#FF9F40',  // Orange
+        'XXL': '#2ECC71', // Green
+        '3XL': '#E74C3C', // Red
+        '4XL': '#3498DB', // Light Blue
+        '5XL': '#9B59B6'  // Violet
+    };
+
     const sizeStockData = @json($stockBySize);
     new Chart(document.getElementById('sizeStockChart'), {
         type: 'bar',
@@ -335,12 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Total Stock',
                 data: sizeStockData.map(item => item.total_quantity),
-                backgroundColor: sizeStockData.map(item => {
-                    const qty = item.total_quantity;
-                    if (qty < 5) return '#dc3545'; // Danger red
-                    if (qty < 10) return '#ffc107'; // Warning yellow
-                    return '#0d6efd'; // Primary blue
-                }),
+                backgroundColor: sizeStockData.map(item => sizeColors[item.size] || '#95A5A6'), // Default to gray if size not in mapping
                 borderColor: '#dee2e6',
                 borderWidth: 1
             }]
