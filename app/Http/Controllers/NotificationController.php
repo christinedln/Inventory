@@ -12,12 +12,19 @@ use App\Models\Notification;
 class NotificationController extends Controller
 {
 
+    /**
+     * Display a paginated list of notifications, sorted by newest first.
+     */
     public function index()
     {
         $notifications = Notification::orderBy('notification_id', 'desc')->paginate(10);
         return view('notification', compact('notifications'));
     }
 
+     /**
+     * Redirect to the correct inventory page that contains the product linked to the notification.
+     * Used when resolving a notification related to a product.
+     */
    public function resolve($id)
     {
         $notification = DB::table('notifications')->where('notifiable_id', $id)->first();
@@ -42,7 +49,10 @@ class NotificationController extends Controller
 
         return redirect()->route('inventory');
     }
-
+    
+/**
+     * Toggle the notification status between 'resolved' and 'unresolved'.
+     */
 public function toggleStatus($id)
 {
     $notification = Notification::findOrFail($id);

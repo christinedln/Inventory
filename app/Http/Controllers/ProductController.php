@@ -11,7 +11,7 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-
+    // Display the product inventory with pagination
     public function index(Request $request)
     {
         $highlightId = session('highlight_id'); 
@@ -21,6 +21,7 @@ class ProductController extends Controller
         return view('inventory', compact('products', 'highlightId'));
     }
 
+    //Store a new product in the products table
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -32,6 +33,17 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
+        // Check if a product with the same name and clothing type already exists
+       $exists = Product::where('product_name', $validated['product_name'])
+                     ->where('clothing_type', $validated['clothing_type'])
+                     ->exists();
+
+    if ($exists) {
+        return redirect()->back()->withErrors([
+            'duplicate' => 'A product with the same name and clothing type already exists.'
+        ])->withInput();
+    }
+
 
         Product::create($validated);
 
@@ -40,7 +52,7 @@ class ProductController extends Controller
     }
 
 
-    // Delete function for PostgreSQL
+    // Delete a product by its ID
     public function delete($id)
     {
         DB::table('products')->where('product_id', $id)->delete();
@@ -48,7 +60,8 @@ class ProductController extends Controller
 
         return redirect()->back()->with('success', 'Product deleted successfully!');
     }
-    
+
+    //Update a product’s information and triggers a notification if a products's quantity is below 10
     public function update(Request $request, $id)
     {
         $validated = $request->validate([

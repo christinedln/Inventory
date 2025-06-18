@@ -64,6 +64,11 @@
                 Add New Product
             </a>
         </div>
+             @if ($errors->has('duplicate'))
+                    <div class="alert alert-danger">
+                        {{ $errors->first('duplicate') }}
+                    </div>
+                @endif
 
         <!-- Product List -->
         <div class="card shadow-sm">
@@ -143,6 +148,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+
                 <form method="POST" action="{{ route('inventory.store') }}">
                     @csrf
                     <div class="row mb-3">
