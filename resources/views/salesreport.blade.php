@@ -12,7 +12,7 @@
 <body>
 
 
-<!-- Header for small screens -->
+
 <nav class="navbar navbar-light bg-light d-md-none">
   <div class="container-fluid">
     <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
