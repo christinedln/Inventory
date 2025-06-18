@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cuffed</title>
-  @vite(['resources/css/salesreport.css'])
+@vite(['resources/css/salesreport.css', 'resources/js/salesreport.js'])
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
  
@@ -13,6 +13,8 @@
 
 
 
+
+<!-- Header for small screens -->
 <nav class="navbar navbar-light bg-light d-md-none">
   <div class="container-fluid">
     <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
@@ -23,11 +25,15 @@
 </nav>
 
 
+
+
 <div class="container-fluid">
   <div class="row">
 
 
-    
+
+
+   
     <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
       <h4><strong>Cuffed</strong></h4>
       <ul class="nav flex-column">
@@ -41,9 +47,13 @@
     </div>
 
 
-    
+
+
+   
     <div class="col-md-9 col-lg-10 p-4">
       <h3 class="mb-4">Sales Report</h3>
+
+
 
 
       <div class="card shadow-sm">
@@ -65,29 +75,57 @@
                                 <tr class="text-center">
                                     <td colspan="6">No sales data available.</td>
                                 </tr>
-                @else
-                  @foreach ($salesReports as $report)
-                    <tr class="text-center">
-                      <td>{{ \Carbon\Carbon::parse($report->month)->format('F Y') }}</td>
-                      <td>₱{{ number_format($report->total_sales_revenue, 2) }}</td>
-                      <td>{{ $report->total_sales }}</td>
-                      <td>₱{{ number_format($report->target_sales_revenue) }}</td>
-                      <td class="text-center">
-                        @if ($report->accomplishment < 100)
-                          <span class="text-danger">▼ {{ number_format($report->accomplishment, 2) }}%</span>
-                        @else
-                          <span class="text-success">
-                            @if ($report->accomplishment > 100)▲ @endif{{ number_format($report->accomplishment, 2) }}%
-                          </span>
-                        @endif
-                      </td>
+               @else
+  @foreach ($salesReports as $report)
+    <tr class="text-center">
+      <td>{{ \Carbon\Carbon::parse($report->month)->format('F Y') }}</td>
+      <td>₱{{ number_format($report->total_sales_revenue, 2) }}</td>
+      <td>{{ $report->total_sales }}</td>
+      <td>₱{{ number_format($report->target_sales_revenue) }}</td>
+      <td class="text-center">
+        @if ($report->accomplishment < 100)
+          <span class="text-danger"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Sales performance did not meet the monthly target.">
+            ▼ {{ number_format($report->accomplishment, 2) }}%
+          </span>
+        @elseif ($report->accomplishment == 100)
+          <span class="text-primary"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Sales performance exactly met the monthly target.">
+            ● {{ number_format($report->accomplishment, 2) }}%
+          </span>
+        @else
+          <span class="text-success"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Sales performance exceeded the monthly target.">
+            ▲ {{ number_format($report->accomplishment, 2) }}%
+          </span>
+        @endif
+      </td>
+
+
                       <td>
-                        @if ($report->growth_per_month == 0)
-                          {{ number_format($report->growth_per_month, 2) }}%
+                         @if ($report->growth_per_month == 0)
+                         <span
+                         data-bs-toggle="tooltip"
+                         data-bs-placement="top"
+                         title="No change compared to the previous month's sales.">
+     ●  {{ number_format($report->growth_per_month, 2) }}%
+    </span>
                         @elseif ($report->growth_per_month > 0)
-                          <span class="text-success">▲ {{ number_format($report->growth_per_month, 2) }}%</span>
+                           <span class="text-success"
+                             data-bs-toggle="tooltip"
+                             data-bs-placement="top"
+                             title="Positive growth from the previous month.">▲ {{ number_format($report->growth_per_month, 2) }}%</span>
                         @else
-                          <span class="text-danger">▼ {{ number_format(abs($report->growth_per_month), 2) }}%</span>
+                          <span class="text-danger"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title="Sales declined compared to the previous month.">▼ {{ number_format(abs($report->growth_per_month), 2) }}%</span>
                         @endif
                       </td>
                     </tr>
@@ -99,6 +137,9 @@
 
 
 
+
+
+
           <nav>
             {{ $salesReports->links('pagination::bootstrap-5') }}
           </nav>
@@ -107,6 +148,9 @@
     </div>
   </div>
 </div>
+
+
+
 
 
 
@@ -128,6 +172,10 @@
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+
 </body>
 </html>
+
