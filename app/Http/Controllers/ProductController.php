@@ -33,14 +33,16 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
-        // Check if a product with the same name and clothing type already exists
+        // Check if a product with the same product_name, clothing_type, color, and size already exists
        $exists = Product::where('product_name', $validated['product_name'])
-                     ->where('clothing_type', $validated['clothing_type'])
-                     ->exists();
+            ->where('clothing_type', $validated['clothing_type'])
+            ->where('color', $validated['color'])
+            ->where('size', $validated['size'])
+            ->exists();
 
     if ($exists) {
         return redirect()->back()->withErrors([
-            'duplicate' => 'A product with the same name and clothing type already exists.'
+            'duplicate' => 'That product already exists.'
         ])->withInput();
     }
 
