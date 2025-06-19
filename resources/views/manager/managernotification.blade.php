@@ -1,5 +1,3 @@
-<?php
-/*
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,7 +75,7 @@
                                         </button>
                                     </form>
 
-                                    <form action="{{ route('notifications.toggleStatus', $notification->notification_id) }}" method="POST">
+                                    <form action="{{ route('manager.notifications.toggleStatus', $notification->notification_id) }}" method="POST">
                                         @csrf
                                         <button type="submit"
                                             class="btn btn-sm {{ $notification->status === 'unresolved' ? 'btn-primary' : 'btn-outline-secondary' }}">
@@ -106,5 +104,3 @@
     </main>
 </body>
 </html>
-*/
-?>
