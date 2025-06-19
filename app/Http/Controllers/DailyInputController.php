@@ -4,11 +4,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\DailySales;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class DailyInputController extends Controller
 {
     public function index(Request $request)
     {
+        if (!in_array(Auth::user()->role, [User::ROLE_ADMIN, User::ROLE_INVENTORY_MANAGER])) {
+            return redirect()->route(Auth::user()->getDashboardRoute());
+        }
+
         $today = Carbon::now()->format('Y-m-d');
         $entries = DailySales::orderBy('date', 'desc')->get();
         
@@ -17,6 +23,10 @@ class DailyInputController extends Controller
 
     public function store(Request $request)
     {
+        if (!in_array(Auth::user()->role, [User::ROLE_ADMIN, User::ROLE_INVENTORY_MANAGER])) {
+            return redirect()->route(Auth::user()->getDashboardRoute());
+        }
+
         $request->validate([
             'date' => 'required|date',
             'daily_revenue' => 'required|numeric|min:0',
@@ -32,6 +42,10 @@ class DailyInputController extends Controller
 
     public function destroy($id)
     {
+        if (!in_array(Auth::user()->role, [User::ROLE_ADMIN, User::ROLE_INVENTORY_MANAGER])) {
+            return redirect()->route(Auth::user()->getDashboardRoute());
+        }
+
         $entry = DailySales::findOrFail($id);
         $entry->delete();
         
