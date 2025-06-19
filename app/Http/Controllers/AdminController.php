@@ -37,16 +37,4 @@ class AdminController extends Controller
 
         return redirect()->route('admin.users')->with('success', 'User created successfully');
     }
-
-    public function sales()
-    {
-        $sales = SalesReport::with('product')->get();
-        return view('admin.sales', compact('sales'));
-    }
-
-    public function inventory()
-    {
-        $products = Product::all();
-        return view('admin.inventory', compact('products'));
-    }
 }

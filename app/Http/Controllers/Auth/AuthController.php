@@ -37,7 +37,7 @@ class AuthController extends Controller
                 case User::ROLE_ADMIN:
                     return redirect()->route('admin.dashboard');
                 case User::ROLE_INVENTORY_MANAGER:
-                    return redirect()->route('inventory.dashboard');
+                    return redirect()->route('manager.dashboard');
                 default:
                     return redirect()->route('user.dashboard');
             }

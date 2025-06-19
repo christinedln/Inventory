@@ -9,14 +9,7 @@ class InventoryManagerController extends Controller
 {
     public function dashboard()
     {
-        return view('inventory.managerdashboard');
+        return view('manager.managerdashboard');
     }
 
-    public function products()
-    {
-        $products = Product::all();
-        return view('inventory.products', compact('products'));
-    }
-
-    // Add more inventory manager-specific methods here as needed
 }

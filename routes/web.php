@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\User;
 use App\Http\Controllers\InventoryManagerController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Manager\ManagerDashboardController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
@@ -25,22 +26,12 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-
-
-// Admin routes
 Route::middleware(['auth'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function () {
-        if (auth()->user()->role !== User::ROLE_ADMIN) {
-            return redirect()->route(auth()->user()->getDashboardRoute());
-        }
-        return view('admin.admindashboard');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 });
 
-// Inventory Manager routes
-Route::middleware(['auth'])->prefix('inventory')->group(function () {
-    Route::get('/dashboard', [InventoryManagerController::class, 'dashboard'])->name('inventory.dashboard');
-    Route::get('/products', [InventoryManagerController::class, 'products'])->name('inventory.products');
+Route::middleware(['auth'])->prefix('manager')->group(function () {
+    Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('manager.dashboard');
 });
 
 // User routes
@@ -57,8 +48,6 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
-
-Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
 Route::post('/inventory', [ProductController::class, 'store'])->name('inventory.store');
 Route::get('/inventory', [ProductController::class, 'index'])->name('inventory');

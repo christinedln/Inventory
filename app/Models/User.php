@@ -82,7 +82,7 @@ class User extends Authenticatable
     {
         return match($this->role) {
             self::ROLE_ADMIN => 'admin.dashboard',
-            self::ROLE_INVENTORY_MANAGER => 'inventory.dashboard',
+            self::ROLE_INVENTORY_MANAGER => 'manager.dashboard',
             default => 'user.dashboard',
         };
     }

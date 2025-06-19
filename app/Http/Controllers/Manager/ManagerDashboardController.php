@@ -1,20 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Manager;
 
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 use Carbon\Carbon;
+use App\Http\Controllers\Controller;
 
-class DashboardController extends Controller
+class ManagerDashboardController extends Controller
 {
     public function index()
     {
+        if (Auth::user()->role !== User::ROLE_INVENTORY_MANAGER) {
+            return redirect()->route(Auth::user()->getDashboardRoute());
+        }
 
         $totalProducts = Product::count(); // Get total products
-        $lowStockCount = Product::where('quantity', '<', 10)->count(); //Count the products that has low stock
-
-
+        $lowStockCount = Product::where('quantity', '<', 10)->count(); // Count low stock
 
         // Category distribution for pie chart
         $productsByCategory = Product::select('clothing_type', DB::raw('count(*) as count'))
@@ -36,7 +40,7 @@ class DashboardController extends Controller
         // Stock levels by size for bar chart
         $stockBySize = DB::table('products')
             ->select('size', DB::raw('SUM(quantity) as total_quantity'))
-            ->whereNotNull('size')  // Ensure we only count products with sizes
+            ->whereNotNull('size')
             ->groupBy('size')
             ->orderBy(DB::raw('CASE
                 WHEN size = \'XS\' THEN 1
@@ -45,10 +49,9 @@ class DashboardController extends Controller
                 WHEN size = \'L\' THEN 4
                 WHEN size = \'XL\' THEN 5
                 WHEN size = \'XXL\' THEN 6
-                ELSE 7 END'))  // Order sizes logically
+                ELSE 7 END'))
             ->get();
 
-        // We don't need these arrays anymore as we're using $stockBySize directly in the view
         $sizeLabels = $stockBySize->pluck('size');
         $sizeValues = $stockBySize->pluck('total_quantity');
 
@@ -62,22 +65,20 @@ class DashboardController extends Controller
             ->count('clothing_type');
 
         $stockLevels = Product::select('product_name', 'quantity', 'clothing_type')
-            ->orderBy('quantity', 'asc')  // Show lowest stock first
+            ->orderBy('quantity', 'asc')
             ->get();
 
-        // Get top performing products by quantity
         $topPerformers = Product::select('product_name', 'quantity')
             ->orderBy('quantity', 'desc')
             ->limit(5)
             ->get();
 
-        // Get low stock items (less than 10 units)
         $lowStockItems = Product::where('quantity', '<', 10)
             ->select('product_name', 'quantity', 'clothing_type')
             ->orderBy('quantity')
             ->get();
 
-        return view('admin.admindashboard', compact(
+        return view('manager.managerdashboard', compact(
             'categoryLabels',
             'categoryValues',
             'sizeLabels',
