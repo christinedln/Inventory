@@ -74,21 +74,25 @@
                             <tr class="table-header-primary">
                                 <th>Quarter</th>
                                 <th>Target Revenue</th>
-                                <th>Actions</th>
+                                @if($isAdmin)
+                                    <th>Actions</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($targets as $target)
                                 <tr>
                                     <td>Q{{ $target->quarter }}</td>
-                                    <td>${{ number_format($target->target_revenue, 2) }}</td>
-                                    <td>
-                                        <form action="{{ route('sales-report.target-input.destroy', $target->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                                        </form>
-                                    </td>
+                                    <td>₱{{ number_format($target->target_revenue, 2) }}</td>
+                                    @if($isAdmin)
+                                        <td>
+                                            <form action="{{ route('sales-report.target-input.destroy', $target->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                                            </form>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>
