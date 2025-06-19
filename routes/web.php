@@ -11,6 +11,7 @@ use App\Http\Controllers\Manager\ManagerInventoryController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Manager\ManagerNotificationController;
 use App\Http\Controllers\Maintenance\AdminCategoryController;
+use App\Http\Controllers\Maintenance\AdminSizeController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
@@ -42,6 +43,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::post('/notifications/{id}/resolve', [AdminNotificationController::class, 'resolve'])->name('admin.notifications.resolve');
     Route::post('/notifications/{id}/toggle-status', [AdminNotificationController::class, 'toggleStatus'])->name('admin.notifications.toggleStatus');
     Route::get('/maintenance/category', [AdminCategoryController::class, 'index'])->name('admin.maintenance.category');
+    Route::get('/maintenance/size', [AdminSizeController::class, 'index'])->name('admin.maintenance.size');
 });
 
 Route::middleware(['auth'])->prefix('manager')->group(function () {

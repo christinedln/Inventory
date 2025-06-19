@@ -80,7 +80,7 @@
                 <div class="border-start ms-3">
                     <ul class="nav flex-column ps-3 mt-1">
                         <li><a class="nav-link py-1" href= "{{ route('admin.maintenance.category') }}">Categories</a></li>
-                        <li><a class="nav-link py-1" >Size</a></li>
+                        <li><a class="nav-link py-1" href= "{{ route('admin.maintenance.size') }}">Size</a></li>
                     </ul>
                 </div>
             </div>
