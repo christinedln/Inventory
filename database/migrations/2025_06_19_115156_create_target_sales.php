@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('target_sales', function (Blueprint $table) {
             $table->id();
             $table->integer('quarter');
-            $table->bigInteger('target_revenue'); // Changed to bigInteger for large numbers
+            $table->bigInteger('target_revenue');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('target_sales'); // Fixed table name in down method
+        Schema::dropIfExists('target_sales');
     }
 };
