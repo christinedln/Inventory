@@ -5,19 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\TargetInputForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class TargetInputFormController extends Controller
 {
     public function index()
     {
+        if (!in_array(Auth::user()->role, [User::ROLE_ADMIN, User::ROLE_INVENTORY_MANAGER])) {
+            return redirect()->route(Auth::user()->getDashboardRoute());
+        }
+
         $targets = TargetInputForm::orderBy('quarter')->get();
         $existingQuarters = $targets->pluck('quarter')->toArray();
+        $isAdmin = Auth::user()->role === User::ROLE_ADMIN;
         
-        return view('sales-report.target-input', compact('targets', 'existingQuarters'));
+        return view('sales-report.target-input', compact('targets', 'existingQuarters', 'isAdmin'));
     }
 
     public function store(Request $request)
     {
+        if (!in_array(Auth::user()->role, [User::ROLE_ADMIN, User::ROLE_INVENTORY_MANAGER])) {
+            return redirect()->route(Auth::user()->getDashboardRoute());
+        }
+
         $validator = Validator::make($request->all(), TargetInputForm::$rules);
 
         if ($validator->fails()) {
@@ -38,6 +49,10 @@ class TargetInputFormController extends Controller
 
     public function destroy($id)
     {
+        if (Auth::user()->role !== User::ROLE_ADMIN) {
+            return redirect()->back()->with('error', 'Only administrators can delete targets.');
+        }
+
         $target = TargetInputForm::findOrFail($id);
         $target->delete();
 

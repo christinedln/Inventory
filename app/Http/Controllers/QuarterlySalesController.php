@@ -6,15 +6,21 @@ use App\Models\DailySales;
 use App\Models\TargetInputForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class QuarterlySalesController extends Controller
 {
     public function index()
     {
+        if (!in_array(Auth::user()->role, [User::ROLE_ADMIN, User::ROLE_INVENTORY_MANAGER])) {
+            return redirect()->route(Auth::user()->getDashboardRoute());
+        }
+
         // Get quarterly sales using PostgreSQL's EXTRACT function
         $quarterlySales = DailySales::select(
             DB::raw('EXTRACT(QUARTER FROM date) as quarter'),
-            DB::raw('SUM(daily_revenue) as total_sales')  // Changed to daily_revenue
+            DB::raw('SUM(daily_revenue) as total_sales')
         )
         ->groupBy(DB::raw('EXTRACT(QUARTER FROM date)'))
         ->get()

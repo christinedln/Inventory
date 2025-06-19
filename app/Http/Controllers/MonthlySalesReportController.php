@@ -3,15 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\DailySales;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
 class MonthlySalesReportController extends Controller
 {
     public function index()
     {
+        if (!in_array(Auth::user()->role, [User::ROLE_ADMIN, User::ROLE_INVENTORY_MANAGER])) {
+            return redirect()->route(Auth::user()->getDashboardRoute());
+        }
+
         $currentYear = Carbon::now()->year;
+        $isAdmin = Auth::user()->role === User::ROLE_ADMIN;
         
         $monthlySales = DailySales::select(
             DB::raw('EXTRACT(MONTH FROM date) as month'),
@@ -23,11 +30,15 @@ class MonthlySalesReportController extends Controller
         ->orderBy('month')
         ->get();
 
-        return view('sales-report.monthly-sales', compact('monthlySales', 'currentYear'));
+        return view('sales-report.monthly-sales', compact('monthlySales', 'currentYear', 'isAdmin'));
     }
 
     public function export()
     {
+        if (!in_array(Auth::user()->role, [User::ROLE_ADMIN, User::ROLE_INVENTORY_MANAGER])) {
+            return redirect()->route(Auth::user()->getDashboardRoute());
+        }
+
         $sales = DailySales::select('date', 'daily_revenue')
             ->orderBy('date', 'asc')
             ->get();
@@ -87,5 +98,28 @@ class MonthlySalesReportController extends Controller
             'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => 'attachment; filename="' . $filename . '"'
         ]);
+    }
+
+    public function deleteAll()
+    {
+        if (Auth::user()->role !== User::ROLE_ADMIN) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        DailySales::truncate();
+        return redirect()->back()->with('success', 'All sales data has been deleted.');
+    }
+
+    public function deleteMonth($month, $year)
+    {
+        if (Auth::user()->role !== User::ROLE_ADMIN) {
+            return redirect()->back()->with('error', 'Unauthorized action.');
+        }
+
+        DailySales::whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->delete();
+
+        return redirect()->back()->with('success', 'Sales data for the selected month has been deleted.');
     }
 }
