@@ -51,7 +51,7 @@
                         <select name="quarter" id="quarter" class="form-select" required>
                             <option value="">Select a quarter</option>
                             @for($i = 1; $i <= 4; $i++)
-                                @if(!in_array($i, $existingQuarters))
+                                @if(!isset($existingQuarters) || !in_array($i, $existingQuarters))
                                     <option value="{{ $i }}">Q{{ $i }}</option>
                                 @endif
                             @endfor
