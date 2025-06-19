@@ -19,6 +19,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DailyInputController;
 use App\Http\Controllers\TargetInputFormController;
+use App\Http\Controllers\QuarterlySalesController;
 
 // Guest routes
 Route::middleware('guest')->group(function () {
@@ -94,3 +95,5 @@ Route::post('/sales-report/monthly-sales/export', [MonthlySalesReportController:
 Route::get('/sales-report/target-input', [TargetInputFormController::class, 'index'])->name('target-input.index');
 Route::post('/sales-report/target-input', [TargetInputFormController::class, 'store'])->name('target-input.store');
 Route::delete('/sales-report/target-input/{id}', [TargetInputFormController::class, 'destroy'])->name('target-input.destroy');
+
+Route::get('/sales-report/quarterly-sales', [QuarterlySalesController::class, 'index'])->name('quarterly-sales.index');
