@@ -30,14 +30,37 @@
                     <div class="card-header position-relative">
                         <h2 class="mb-0">Monthly Sales Report - {{ $currentYear }}</h2>
                         <div class="position-absolute end-0 top-50 translate-middle-y me-2">
-                            <form action="{{ route('sales-report.monthly-sales.export') }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="btn btn-success">
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-file-export me-2"></i>Export
                                 </button>
-                            </form>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exportModal">
+                                            Export with Date Range
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('sales-report.monthly-sales.export') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="format" value="csv">
+                                            <input type="hidden" name="date_range" value="all">
+                                            <button type="submit" class="dropdown-item">Export All (CSV)</button>
+                                        </form>
+                                    </li>
+                                    <li>
+                                        <form action="{{ route('sales-report.monthly-sales.export') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="format" value="pdf">
+                                            <input type="hidden" name="date_range" value="all">
+                                            <button type="submit" class="dropdown-item">Export All (PDF)</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
                             @if($isAdmin)
-                                <form action="{{ route('sales-report.monthly-sales.delete-all') }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete ALL sales data? This action cannot be undone.');">
+                                <form action="{{ route('sales-report.monthly-sales.delete-all') }}" method="POST" class="d-inline" 
+                                      onsubmit="return confirm('Are you sure you want to delete ALL sales data? This action cannot be undone.');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">
@@ -129,6 +152,43 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exportModalLabel">Export Sales Report</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('sales-report.monthly-sales.export') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="start_date" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="start_date" name="start_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="end_date" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="end_date" name="end_date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="format" class="form-label">Export Format</label>
+                            <select class="form-select" id="format" name="format">
+                                <option value="csv">CSV</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="date_range" value="custom">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Export</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request; 
 
 class MonthlySalesReportController extends Controller
 {
@@ -33,24 +35,29 @@ class MonthlySalesReportController extends Controller
         return view('sales-report.monthly-sales', compact('monthlySales', 'currentYear', 'isAdmin'));
     }
 
-    public function export()
+    public function export(Request $request)
     {
         if (!in_array(Auth::user()->role, [User::ROLE_ADMIN, User::ROLE_INVENTORY_MANAGER])) {
             return redirect()->route(Auth::user()->getDashboardRoute());
         }
 
-        $sales = DailySales::select('date', 'daily_revenue')
-            ->orderBy('date', 'asc')
-            ->get();
+        $format = $request->input('format', 'csv');
+        $dateRange = $request->input('date_range', 'all');
+        $startDate = null;
+        $endDate = null;
 
-        $filename = 'sales_report_' . now()->format('Y-m-d') . '.csv';
-        $handle = fopen('php://temp', 'r+');
+        // Build query based on date range
+        $query = DailySales::select('date', 'daily_revenue')->orderBy('date', 'asc');
 
-        // Add BOM for Excel to properly detect UTF-8
-        fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+        if ($dateRange !== 'all') {
+            if ($request->has('start_date') && $request->has('end_date')) {
+                $startDate = Carbon::parse($request->start_date);
+                $endDate = Carbon::parse($request->end_date);
+                $query->whereBetween('date', [$startDate, $endDate]);
+            }
+        }
 
-        // Write headers
-        fputcsv($handle, ['Date', 'Revenue']);
+        $sales = $query->get();
 
         // Group sales by month
         $monthlySales = [];
@@ -68,6 +75,34 @@ class MonthlySalesReportController extends Controller
             $monthlySales[$monthKey]['total'] += $sale->daily_revenue;
             $grandTotal += $sale->daily_revenue;
         }
+
+        if ($format === 'pdf') {
+            return $this->exportPDF($monthlySales, $grandTotal);
+        }
+
+        return $this->exportCSV($monthlySales, $grandTotal);
+    }
+
+    protected function exportPDF($monthlySales, $grandTotal)
+    {
+        $pdf = PDF::loadView('sales-report.export.pdf', [
+            'monthlySales' => $monthlySales,
+            'grandTotal' => $grandTotal
+        ]);
+
+        return $pdf->download('sales_report_' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    protected function exportCSV($monthlySales, $grandTotal)
+    {
+        $filename = 'sales_report_' . now()->format('Y-m-d') . '.csv';
+        $handle = fopen('php://temp', 'r+');
+
+        // Add BOM for Excel to properly detect UTF-8
+        fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+
+        // Write headers
+        fputcsv($handle, ['Date', 'Revenue']);
 
         // Write data rows with monthly totals
         foreach ($monthlySales as $month => $data) {
