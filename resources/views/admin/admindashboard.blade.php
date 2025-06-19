@@ -22,10 +22,6 @@
                 </button>
                 <span class="navbar-brand mb-0 h1">Cuffed</span>
             </div>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
-            </form>
         </div>
     </div>
 </nav>
@@ -41,7 +37,6 @@
         <div class="col-md-9 col-lg-10 ms-sm-auto px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                 <h1 class="h2">Dashboard</h1>
-                <div><h1 class="h2">Dsdsdd</h1></div>
                 <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="btn btn btn-dark btn-sm">Logout</button>
