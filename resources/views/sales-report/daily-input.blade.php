@@ -62,7 +62,7 @@
     <div class="container">
         <div class="card shadow">
             <div class="card-header bg-primary text-white">
-                <h2 class="mb-0">Daily Sales Input</h2>
+                <h2 class="mb-0">Daily Sales Input Form</h2>
             </div>
             <div class="card-body">
                 @if(session('success'))

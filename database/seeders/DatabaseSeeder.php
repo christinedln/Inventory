@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ManagerUserSeeder::class,
             ProductsTableSeeder::class,
             DailySalesSeeder::class,
+            TargetSalesSeeder::class
         ]);
     }
 }
