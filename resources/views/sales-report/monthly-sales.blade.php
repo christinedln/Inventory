@@ -130,10 +130,19 @@
                                         <td>
                                             ₱{{ number_format($currentSales, 2) }}
                                             @if($monthNumber > 1)
-                                                @if($currentSales > $previousSales)
-                                                    <span class="text-success">▲</span>
-                                                @elseif($currentSales < $previousSales)
-                                                    <span class="text-danger">▼</span>
+                                                @php
+                                                    $diff = $currentSales - $previousSales;
+                                                    $diffText = '₱' . number_format(abs($diff), 2) . ' ' . ($diff > 0 ? 'higher' : 'lower') . ' than ' . $monthNames[$monthNumber-1];
+                                                    $diffClass = $diff > 0 ? 'text-success' : 'text-danger';
+                                                    $triangle = $diff > 0 ? '▲' : ($diff < 0 ? '▼' : '');
+                                                @endphp
+                                                @if($diff !== 0)
+                                                    <span class="trend-icon {{ $diffClass }} monthly-sales-diff-indicator"
+                                                          data-diff="{{ $diffText }}"
+                                                          data-class="{{ $diffClass }}"
+                                                          style="cursor:pointer;">
+                                                        {{ $triangle }}
+                                                    </span>
                                                 @endif
                                             @endif
                                         </td>

@@ -85,10 +85,28 @@
                                         <td class="value-cell">₱{{ number_format($quarterlyData[$i]['target'], 0) }}</td>
                                         <td class="value-cell">
                                             ₱{{ number_format($quarterlyData[$i]['accomplished'], 0) }}
-                                            @if($quarterlyData[$i]['accomplished'] > $quarterlyData[$i]['target'])
-                                                <span class="text-success">▲</span>
-                                            @elseif($quarterlyData[$i]['accomplished'] < $quarterlyData[$i]['target'])
-                                                <span class="text-danger">▼</span>
+                                            @php
+                                                $target = $quarterlyData[$i]['target'];
+                                                $accomplished = $quarterlyData[$i]['accomplished'];
+                                                $diff = $accomplished - $target;
+                                                $diffText = '₱' . number_format(abs($diff), 0) . ' ' . ($diff > 0 ? 'higher' : 'lower') . ' than target';
+                                                $diffClass = $diff > 0 ? 'text-success' : 'text-danger';
+                                                $triangle = $diff > 0 ? '▲' : ($diff < 0 ? '▼' : '');
+                                            @endphp
+                                            @if($diff > 0)
+                                                <span class="trend-icon {{ $diffClass }} quarterly-sales-diff-indicator"
+                                                      data-diff="{{ $diffText }}"
+                                                      data-class="{{ $diffClass }}"
+                                                      style="cursor:pointer;">
+                                                    {{ $triangle }}
+                                                </span>
+                                            @elseif($diff < 0)
+                                                <span class="trend-icon text-danger sales-diff-indicator"
+                                                      data-diff="{{ $diffText }}"
+                                                      data-class="text-danger"
+                                                      style="cursor:pointer;">
+                                                    {{ $triangle }}
+                                                </span>
                                             @endif
                                         </td>
                                     @endfor
