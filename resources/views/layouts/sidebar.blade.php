@@ -79,7 +79,7 @@
             <div class="collapse" id="maintenanceCollapse">
                 <div class="border-start ms-3">
                     <ul class="nav flex-column ps-3 mt-1">
-                        <li><a class="nav-link py-1" >Categories</a></li>
+                        <li><a class="nav-link py-1" href= "{{ route('admin.maintenance.category') }}">Categories</a></li>
                         <li><a class="nav-link py-1" >Size</a></li>
                     </ul>
                 </div>
@@ -100,12 +100,8 @@
     <h4><strong>Cuffed</strong></h4>
     <ul class="nav flex-column">
         <li><a href="{{ route('manager.dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-<<<<<<< HEAD
-        <li><a href="{{ route('admin.inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
-=======
         <li><a href="{{ route('manager.inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
         <li><a href="{{ route('salesreport') }}" class="nav-link"><i class="bi bi-clipboard-data me-2"></i>Sales Report</a></li>
->>>>>>> bc1bf38a62f3fd6c8a5cf8dc0afa62b70bfadbec
         <li><a href="#" class="nav-link"><i class="bi bi-gear me-2"></i>Maintenance</a></li>
         <li><a href="{{ route('manager.notification') }}"  class="nav-link active">
             <i class="bi bi-bell me-2"></i>Notifications
@@ -128,7 +124,7 @@
         <ul class="nav flex-column">
             @if($user->role === \App\Models\User::ROLE_ADMIN)
                 <li><a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a></li>
-                <li><a href="{{ route('manager.inventory') }}" class="nav-link">Inventory</a></li>
+                <li><a href="{{ route('admin.inventory') }}" class="nav-link">Inventory</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdownMobile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         User Maintenance

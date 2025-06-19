@@ -79,11 +79,7 @@
                         <td>{{ $product->quantity }}</td>
                         <td>₱{{ number_format($product->price, 2) }}</td>
                         <td>
-<<<<<<< HEAD
-                            <a href="{{ route('admin.products.update', ['id' => $product->product_id]) }}"
-=======
-                            <a href="{{ route('admin.products.update') }}"
->>>>>>> bc1bf38a62f3fd6c8a5cf8dc0afa62b70bfadbec
+                            <a href="#"
                             class="edit-product"
                             data-id="{{ $product->product_id }}"
                             data-product_name="{{ e($product->product_name) }}"
@@ -198,7 +194,6 @@
             </div>
             <div class="modal-body">
                 <form method="POST" id="editForm" action="">
-                    @method('POST')
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
