@@ -28,22 +28,36 @@ class AdminInventoryController extends Controller
             'size' => 'required|string',
             'quantity' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
+            'image' => 'required|image|max:15360',
+             // 15MB max
         ]);
 
-        // Check if a product with the same product_name, clothing_type, color, and size already exists
-       $exists = Product::where('product_name', $validated['product_name'])
+        // Check for duplicate product
+        $exists = Product::where('product_name', $validated['product_name'])
             ->where('clothing_type', $validated['clothing_type'])
             ->where('color', $validated['color'])
             ->where('size', $validated['size'])
             ->exists();
 
-    if ($exists) {
-        return redirect()->back()->withErrors([
-            'duplicate' => 'That product already exists.'
-        ])->withInput();
-    }
+        if ($exists) {
+            return redirect()->back()->withErrors([
+                'duplicate' => 'That product already exists.'
+            ])->withInput();
+        }
 
-        Product::create($validated);
+        // Store the image and get the storage path
+        $imagePath = $request->file('image')->store('product_images', 'public');
+
+        // Create the product with image path
+        Product::create([
+            'product_name' => $validated['product_name'],
+            'clothing_type' => $validated['clothing_type'],
+            'color' => $validated['color'],
+            'size' => $validated['size'],
+            'quantity' => $validated['quantity'],
+            'price' => $validated['price'],
+            'image_path' => $imagePath,
+        ]);
 
         return redirect()->route('admin.inventory')->with('success', 'Product added successfully!');
     }
@@ -56,50 +70,75 @@ class AdminInventoryController extends Controller
     }
 
     //Update a product’s information and triggers a notification if a products's quantity is below 10
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'product_name' => 'required|string|max:255',
-            'clothing_type' => 'required|string',
-            'color' => 'required|string',
-            'size' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
-        ]);
+  public function update(Request $request, $id)  
+{
+    $product = Product::findOrFail($id);
+    $originalQuantity = $product->quantity;
 
-        $data = [
-            'product_name' => $validated['product_name'],
-            'clothing_type' => $validated['clothing_type'],
-            'color' => $validated['color'],
-            'size' => $validated['size'],
-            'quantity' => $validated['quantity'],
-            'price' => $validated['price'],
-        ];
+    $validated = $request->validate([
+        'product_name' => 'required|string|max:255',
+        'clothing_type' => 'required|string',
+        'color' => 'required|string',
+        'size' => 'required|string',
+        'quantity' => 'required|integer|min:1',
+        'price' => 'required|numeric|min:0',
+        'reason' => 'nullable|string|max:1000',
+    ]);
 
-        $product = Product::findOrFail($id);
-        $product->update($data);
-           
-        if ($product->quantity < 10) {
-            $latestNotification = DB::table('notifications')
-                ->where('notification', "{$product->product_name} is low on stock")
-                ->where('notifiable_id', $product->product_id)
-                ->where('category', 'inventory')
-                ->orderByDesc('created_at')
-                ->first();
+    $data = [
+        'product_name' => $validated['product_name'],
+        'clothing_type' => $validated['clothing_type'],
+        'color' => $validated['color'],
+        'size' => $validated['size'],
+        'quantity' => $validated['quantity'],
+        'price' => $validated['price'],
+    ];
 
-            if (!$latestNotification || $latestNotification->status === 'resolved') {
-                DB::table('notifications')->insert([
-                    'notification'   => "{$product->product_name} is low on stock",
-                    'type'           => 'warning',
-                    'category'       => 'inventory',
-                    'notifiable_id'  => $product->product_id,
-                    'status'         => 'unresolved',
-                    'created_at'     => now(),
-                    'updated_at'     => now(),
-                ]);
-            }
+    // Add last_reason *after* defining $data
+    if ($validated['quantity'] < $originalQuantity) {
+        if (!$request->filled('reason')) {
+            return back()->withErrors(['reason' => 'Please provide a reason for reducing the quantity.'])->withInput();
         }
 
-        return redirect()->route('admin.inventory')->with('success', 'Product updated successfully!');
+
+        $data['last_reason'] = $validated['reason'];
     }
+
+    // Handle image replacement
+    if ($request->hasFile('image')) {
+        if ($product->image_path && \Storage::disk('public')->exists($product->image_path)) {
+            \Storage::disk('public')->delete($product->image_path);
+        }
+
+        $imagePath = $request->file('image')->store('product_images', 'public');
+        $data['image_path'] = $imagePath;
+    }
+
+    $product->update($data);
+
+    // Low stock check
+    if ($product->quantity < 10) {
+        $latestNotification = DB::table('notifications')
+            ->where('notification', "{$product->product_name} is low on stock")
+            ->where('notifiable_id', $product->product_id)
+            ->where('category', 'inventory')
+            ->orderByDesc('created_at')
+            ->first();
+
+        if (!$latestNotification || $latestNotification->status === 'resolved') {
+            DB::table('notifications')->insert([
+                'notification'   => "{$product->product_name} is low on stock",
+                'type'           => 'warning',
+                'category'       => 'inventory',
+                'notifiable_id'  => $product->product_id,
+                'status'         => 'unresolved',
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+        }
+    }
+
+    return redirect()->route('admin.inventory')->with('success', 'Product updated successfully!');
+}
+
 }

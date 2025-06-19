@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 @vite(['resources/js/sidebar.js'])
 
-@if($user && ($user->role === \App\Models\User::ROLE_ADMIN || $user->role === \App\Models\User::ROLE_INVENTORY_MANAGER))
+@if($user && $user->role === \App\Models\User::ROLE_ADMIN)
 <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
     <h4><strong>Cuffed</strong></h4>
     <ul class="nav flex-column">
@@ -102,8 +102,49 @@
     <ul class="nav flex-column">
         <li><a href="{{ route('manager.dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
         <li><a href="{{ route('manager.inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
-        <li><a href="{{ route('salesreport') }}" class="nav-link"><i class="bi bi-clipboard-data me-2"></i>Sales Report</a></li>
-        <li><a href="#" class="nav-link"><i class="bi bi-gear me-2"></i>Maintenance</a></li>
+        <li class="nav-item">
+            <button class="nav-link d-flex justify-content-between align-items-center w-100 border-0 bg-transparent"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#salesReportCollapse"
+                aria-expanded="false"
+                aria-controls="salesReportCollapse"
+                id="salesReportToggle">
+                <span><i class="bi bi-clipboard-data me-2"></i>Sales Report</span>
+                <i class="bi bi-caret-down-fill transition" id="salesReportCaret"></i>
+            </button>
+            <div class="collapse" id="salesReportCollapse">
+                <div class="border-start ms-3">
+                    <ul class="nav flex-column ps-3 mt-1">
+                        <li><a class="nav-link py-1" href="{{ route('sales-report.daily-sales.index') }}">Daily Input Form</a></li>
+                        <li><a class="nav-link py-1" href="{{ route('sales-report.target-input.index') }}">Target Input Form</a></li>
+                        <li><a class="nav-link py-1" href="{{ route('sales-report.monthly-sales.index') }}">Monthly Sales Report</a></li>
+                        <li><a class="nav-link py-1" href="{{ route('sales-report.quarterly-sales.index') }}">Target Across Four Quarters</a></li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link d-flex justify-content-between align-items-center w-100 border-0 bg-transparent"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#maintenanceCollapse"
+                aria-expanded="false"
+                aria-controls="maintenanceCollapse"
+                id="maintenanceToggle">
+                <span><i class="bi bi-gear me-2"></i>Maintenance</span>
+                <i class="bi bi-caret-down-fill transition" id="maintenanceCaret"></i>
+            </button>
+
+            <div class="collapse" id="maintenanceCollapse">
+                <div class="border-start ms-3">
+                    <ul class="nav flex-column ps-3 mt-1">
+                        <li><a class="nav-link py-1" href= "{{ route('manager.maintenance.category') }}">Categories</a></li>
+                        <li><a class="nav-link py-1" href= "{{ route('manager.maintenance.size') }}">Size</a></li>
+                    </ul>
+                </div>
+            </div>
+        </li>
         <li><a href="{{ route('manager.notification') }}"  class="nav-link active">
             <i class="bi bi-bell me-2"></i>Notifications
             @if(isset($unresolvedCount) && $unresolvedCount > 0)
@@ -115,7 +156,7 @@
 @endif
 
 <!-- Offcanvas (mobile sidebar) -->
-@if($user && ($user->role === \App\Models\User::ROLE_ADMIN || $user->role === \App\Models\User::ROLE_INVENTORY_MANAGER))
+@if($user && $user->role === \App\Models\User::ROLE_ADMIN)
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title">Inventory</h5>
@@ -142,7 +183,7 @@
                         Sales Report
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="salesReportDropdownMobile">
-                        <li><a class="dropdown-item" href="#">Daily Report</a></li>
+                        <li><a class="dropdown-item" href="#">Daily Input Form</a></li>
                         <li><a class="dropdown-item" href="#">Monthly Report</a></li>
                         <li><a class="dropdown-item" href="#">Annual Report</a></li>
                     </ul>

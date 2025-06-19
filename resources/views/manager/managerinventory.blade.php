@@ -8,7 +8,6 @@
     @vite(['resources/js/inventory.js'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
 </head>
 <body>
 
@@ -50,12 +49,14 @@
                     <table class="table table-hover align-middle">
                         <thead class="table-light">
                         <tr class="text-center">
+                            <th>Image</th>
                             <th>Product Name</th>
                             <th>Clothing Type</th>
                             <th>Color</th>
                             <th>Size</th>
                             <th>Date</th>
                             <th>Quantity</th>
+                            <th>Reason for Reduced Quantities</th>
                             <th>Price</th>
                             <th>Actions</th>
                         </tr>
@@ -64,6 +65,13 @@
 
                          @foreach ($products as $product)
                     <tr class="text-center @if($highlightId == $product->product_id) table-primary @endif">
+                        <td>
+                            @if($product->image_path)
+                                <img src="{{ asset('storage/' . $product->image_path) }}" alt="Product Image" width="60" height="60">
+                            @else
+                                N/A
+                            @endif
+                        </td>
                         <td>{{ $product->product_name }}</td>
                         <td>{{ $product->clothing_type }}</td>
                         <td>{{ $product->color }}</td>
@@ -77,24 +85,27 @@
                         @endif
                         </td>
                         <td>{{ $product->quantity }}</td>
+                        <td>{{ $product->last_reason }}</td>
                         <td>₱{{ number_format($product->price, 2) }}</td>
                         <td>
-                            <a href="#" 
+                            <a href="#"
                             class="edit-product"
                             data-id="{{ $product->product_id }}"
+                            data-image="{{ asset('storage/' . $product->image_path) }}"
                             data-product_name="{{ e($product->product_name) }}"
                             data-clothing_type="{{ $product->clothing_type }}"
                             data-color="{{ $product->color }}"
                             data-size="{{ $product->size }}"
                             data-date="{{ $product->updated_at ? $product->updated_at : '' }}"
                             data-quantity="{{ $product->quantity }}"
+                            data-last_reason="{{ $product->last_reason }}"
                             data-price="{{ $product->price }}"
-                            data-bs-toggle="modal" 
+                            data-bs-toggle="modal"
                             data-bs-target="#editProductModal"
                             title="Edit"><i class="bi bi-pencil-square"></i></a>
-                            
-                            <a href="{{ url('/product/delete/' . $product->product_id) }}" 
-                            class="text-danger ms-2" 
+                           
+                            <a href="{{ route('manager.product.delete', $product->product_id) }}"
+                            class="text-danger ms-2"
                             onclick="return confirm('Are you sure you want to delete this product?')">
                             <i class="bi bi-trash"></i>
                             </a>
@@ -121,9 +132,13 @@
             </div>
             <div class="modal-body">
 
-                <form method="POST" action="{{ route('manager.inventory.store') }}">
+                <form method="POST" action="{{ route('admin.inventory.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="productImage" class="form-label">Product Image</label>
+                            <input type="file" name="image" class="form-control" id="productImage" accept="image/*" required>
+                        </div>
                         <div class="col-md-6">
                             <label for="productName" class="form-label">Product Name</label>
                             <input type="text" name="product_name" class="form-control" id="productName" required>
@@ -180,6 +195,7 @@
                     </div>
                 </form>
 
+
             </div>
         </div>
     </div>
@@ -193,10 +209,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="POST" id="editForm" action="">
-                    @method('POST')
+                <form method="POST" id="editForm" action="" enctype="multipart/form-data">
                     @csrf
+                    @method('POST')
                     <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Current Image</label><br>
+                            <img id="edit-current-image" src="" alt="Product Image" width="100" height="100" class="mb-2">
+                            <input type="file" name="image" class="form-control mt-2" accept="image/*">
+                            <small class="text-muted">Leave empty to keep current image.</small>
+                        </div>
                         <div class="col-md-6">
                             <label for="edit-productName" class="form-label">Product Name</label>
                             <input type="text" name="product_name" class="form-control" id="edit-productName" required>
@@ -238,11 +260,16 @@
                     </div>
 
                     <div class="row mb-3">
-                
+               
                         <div class="col-md-6">
                             <label for="edit-quantity" class="form-label">Quantity</label>
                             <input type="number" name="quantity" class="form-control" id="edit-quantity" required>
                         </div>
+                        <div class="col-md-12 mt-3" id="edit-reason-container" style="display: none;">
+                            <label for="edit-reason" class="form-label">Reason for Reducing Quantity</label>
+                            <textarea name="reason" class="form-control" id="edit-reason" rows="3" placeholder="Enter reason here..."></textarea>
+                        </div>
+
                         <div class="col-md-6">
                             <label for="edit-price" class="form-label">Price (₱)</label>
                             <input type="number" step="0.01" name="price" class="form-control" id="edit-price" required>
@@ -251,7 +278,11 @@
 
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">Save Product</button>
+                        <button type="button" class="btn btn-warning ms-2" id="applyApprovalBtn" style="display: none;">
+                        Apply for Approval
+                    </button>
                     </div>
+ 
                 </form>
 
             </div>
@@ -260,7 +291,6 @@
 </div>
 
 </div>
-
 
 </body>
 </html>
