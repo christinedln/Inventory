@@ -14,24 +14,25 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         // Create Admin user
+        \DB::table('users')->truncate();
         User::create([
             'username' => 'admin',
-            'email' => 'admin@inventory.com',
-            'password' => Hash::make('admin123'), // Change this in production!
+            'email' => 'admin@cuffed.com',
+            'password' => Hash::make('admin123'), 
             'role' => 'ADMIN'
         ]);
 
         User::create([
             'username' => 'admin2',
-            'email' => 'admin2@inventory.com',
-            'password' => Hash::make('admin123'), // Change this in production!
+            'email' => 'admin2@cuffed.com',
+            'password' => Hash::make('admin123'),
             'role' => 'ADMIN'
         ]);
 
         User::create([
             'username' => 'admin3',
-            'email' => 'admin3@inventory.com',
-            'password' => Hash::make('admin123'), // Change this in production!
+            'email' => 'admin3@cuffed.com',
+            'password' => Hash::make('admin123'), 
             'role' => 'ADMIN'
         ]);
     }

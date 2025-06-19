@@ -77,7 +77,7 @@ class DashboardController extends Controller
             ->orderBy('quantity')
             ->get();
 
-        return view('dashboard', compact(
+        return view('admin.admindashboard', compact(
             'categoryLabels',
             'categoryValues',
             'sizeLabels',

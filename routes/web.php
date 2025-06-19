@@ -4,17 +4,28 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Models\User;
 use App\Http\Controllers\InventoryManagerController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SalesReportController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\NotificationController;
 
 // Guest routes
 Route::middleware('guest')->group(function () {
-    Route::get('/', function () {
-        return redirect()->route('login');
-    });
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
 });
+
+Route::get('/', function () {
+    if (auth()->check()) {
+        $dashboardRoute = auth()->user()->getDashboardRoute();
+        return redirect()->route($dashboardRoute);
+    }
+    return redirect()->route('login');
+});
+
+
 
 // Admin routes
 Route::middleware(['auth'])->prefix('admin')->group(function () {
@@ -47,25 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-/*
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\SalesReportController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\NotificationController;
-
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-Route::get('/inventory', function () {
-    return view('inventory');
-})->name('inventory');
-
-Route::get('/salesreport', function () {
-    return view('salesreport');
-})->name('salesreport');
-
-Route::get('/notification', function () {
-    return view('notification');
-})->name('notification');
+Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
 Route::post('/inventory', [ProductController::class, 'store'])->name('inventory.store');
 Route::get('/inventory', [ProductController::class, 'index'])->name('inventory');
@@ -77,7 +70,3 @@ Route::post('/notifications/{id}/resolve', [NotificationController::class, 'reso
 Route::post('/notifications/{id}/toggle-status', [NotificationController::class, 'toggleStatus'])->name('notifications.toggleStatus');
 
 Route::get('/salesreport', [SalesReportController::class, 'index'])->name('salesreport');
-*/
-
-
-
