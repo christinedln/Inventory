@@ -45,12 +45,11 @@
                     <form action="{{ route('sales-report.daily-sales.store') }}" method="POST">
                         @csrf
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle">
+                            <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Date</th>
                                         <th>Daily Revenue (₱)</th>
-                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -63,15 +62,15 @@
                                             <input type="number" step="0.01" class="form-control" 
                                                 id="daily_revenue" name="daily_revenue" required>
                                         </td>
-                                        <td>
-                                            <button type="submit" class="btn btn-primary">Submit</button>
-                                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#historyModal">
-                                                View History
-                                            </button>
-                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#historyModal">
+                                View History
+                            </button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
                     </form>
                 </div>
