@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Http\Controllers\InventoryManagerController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Manager\ManagerDashboardController;
-use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DailyInputController;

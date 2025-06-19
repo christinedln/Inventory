@@ -124,7 +124,6 @@
             @if($user->role === \App\Models\User::ROLE_ADMIN)
                 <li><a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a></li>
                 <li><a href="{{ route('inventory') }}" class="nav-link">Inventory</a></li>
-                <li><a href="{{ route('salesreport') }}" class="nav-link">Sales Report</a></li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdownMobile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         User Maintenance

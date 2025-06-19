@@ -15,7 +15,7 @@ class DailySalesSeeder extends Seeder
         DailySales::truncate();
 
         // Create period from April 1 to May 31
-        $period = CarbonPeriod::create('2025-04-01', '2025-05-31');
+        $period = CarbonPeriod::create('2025-01-01', '2025-05-31');
 
         // Iterate through each day and create a record
         foreach ($period as $date) {
