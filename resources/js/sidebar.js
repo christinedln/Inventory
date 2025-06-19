@@ -6,12 +6,24 @@ function closeUserMaintenanceDropdown() {
     }
 }
 
+function closeSalesReportDropdown() {
+    const collapseDiv = document.getElementById('salesReportCollapse');
+    if (collapseDiv && collapseDiv.classList.contains('show')) {
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseDiv);
+        bsCollapse.hide();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
+    // User Maintenance caret
     const caretIcon = document.getElementById('caretIcon');
     const collapseDiv = document.getElementById('userMaintenanceCollapse');
     const collapseToggle = document.getElementById('userCollapseToggle');
 
-    if (!caretIcon || !collapseDiv || !collapseToggle) return;
+    // Sales Report caret
+    const salesCaret = document.getElementById('salesReportCaret');
+    const salesCollapse = document.getElementById('salesReportCollapse');
+    const salesToggle = document.getElementById('salesReportToggle');
 
     // Add CSS for caret rotation
     const style = document.createElement('style');
@@ -23,24 +35,47 @@ document.addEventListener('DOMContentLoaded', function () {
     `;
     document.head.appendChild(style);
 
-    // Handle collapse events
-    collapseDiv.addEventListener('show.bs.collapse', () => {
-        caretIcon.classList.add('rotate-caret');
-    });
+    // User Maintenance caret rotation
+    if (caretIcon && collapseDiv) {
+        collapseDiv.addEventListener('show.bs.collapse', () => {
+            caretIcon.classList.add('rotate-caret');
+        });
+        collapseDiv.addEventListener('hide.bs.collapse', () => {
+            caretIcon.classList.remove('rotate-caret');
+        });
+    }
 
-    collapseDiv.addEventListener('hide.bs.collapse', () => {
-        caretIcon.classList.remove('rotate-caret');
-    });
+    // Sales Report caret rotation
+    if (salesCaret && salesCollapse) {
+        salesCollapse.addEventListener('show.bs.collapse', () => {
+            salesCaret.classList.add('rotate-caret');
+        });
+        salesCollapse.addEventListener('hide.bs.collapse', () => {
+            salesCaret.classList.remove('rotate-caret');
+        });
+    }
 
-    // Close dropdown when clicking outside
+    // Close dropdowns when clicking outside
     document.addEventListener('click', function (e) {
-        // If click is NOT on the toggle or inside the collapse, close it
+        // User Maintenance
         if (
+            collapseToggle &&
+            collapseDiv &&
             !collapseToggle.contains(e.target) &&
             !collapseDiv.contains(e.target) &&
             collapseDiv.classList.contains('show')
         ) {
             closeUserMaintenanceDropdown();
+        }
+        // Sales Report
+        if (
+            salesToggle &&
+            salesCollapse &&
+            !salesToggle.contains(e.target) &&
+            !salesCollapse.contains(e.target) &&
+            salesCollapse.classList.contains('show')
+        ) {
+            closeSalesReportDropdown();
         }
     });
 });

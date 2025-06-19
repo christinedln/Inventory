@@ -16,7 +16,29 @@
     <ul class="nav flex-column">
         <li><a href="{{ route('admin.dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
         <li><a href="{{ route('inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
-        <li><a href="{{ route('salesreport') }}" class="nav-link"><i class="bi bi-clipboard-data me-2"></i>Sales Report</a></li>
+
+        <li class="nav-item">
+            <button class="nav-link d-flex justify-content-between align-items-center w-100 border-0 bg-transparent"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#salesReportCollapse"
+                aria-expanded="false"
+                aria-controls="salesReportCollapse"
+                id="salesReportToggle">
+                <span><i class="bi bi-clipboard-data me-2"></i>Sales Report</span>
+                <i class="bi bi-caret-down-fill transition" id="salesReportCaret"></i>
+            </button>
+
+            <div class="collapse" id="salesReportCollapse">
+                <div class="border-start ms-3">
+                    <ul class="nav flex-column ps-3 mt-1">
+                        <li><a class="nav-link py-1" href="#">Daily Input Form</a></li>
+                        <li><a class="nav-link py-1" href="#">Monthly Sales Report</a></li>
+                        <li><a class="nav-link py-1" href="#">Target Across Four Quarters</a></li>
+                    </ul>
+                </div>
+            </div>
+        </li>
 
         <!-- User Maintenance Dropdown (Bootstrap Collapse) -->
         <li class="nav-item">
