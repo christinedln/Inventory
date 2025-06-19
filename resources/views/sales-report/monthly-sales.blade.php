@@ -29,20 +29,44 @@
                 <div class="card">
                     <div class="card-header position-relative">
                         <h2 class="mb-0">Monthly Sales Report - {{ $currentYear }}</h2>
-                        <form action="{{ route('sales-report.monthly-sales.export') }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-success export-button">
-                                <i class="fas fa-file-export me-2"></i>Export
-                            </button>
-                        </form>
+                        <div class="position-absolute end-0 top-50 translate-middle-y me-2">
+                            <form action="{{ route('sales-report.monthly-sales.export') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-file-export me-2"></i>Export
+                                </button>
+                            </form>
+                            @if($isAdmin)
+                                <form action="{{ route('sales-report.monthly-sales.delete-all') }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete ALL sales data? This action cannot be undone.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-trash-alt me-2"></i>Delete All
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
                     </div>
                     <div class="card-body">
+                        @if(session('success'))
+                            <div class="alert alert-success">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        @if(session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th>Month</th>
                                         <th>Total Sales</th>
+                                        @if($isAdmin)
+                                            <th></th>  <!-- Removed the "Actions" text -->
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -69,16 +93,28 @@
                                                 ₱{{ number_format($currentSales, 2) }}
                                                 @if($monthNumber > 1)
                                                     @if($currentSales > $previousSales)
-                                                        <span class="text-success">
-                                                            ▲
-                                                        </span>
+                                                        <span class="text-success">▲</span>
                                                     @elseif($currentSales < $previousSales)
-                                                        <span class="text-danger">
-                                                            ▼
-                                                        </span>
+                                                        <span class="text-danger">▼</span>
                                                     @endif
                                                 @endif
                                             </td>
+                                            @if($isAdmin)
+                                                <td>
+                                                    @if($currentSales > 0)
+                                                        <form action="{{ route('sales-report.monthly-sales.delete-month', ['month' => $monthNumber, 'year' => $currentYear]) }}" 
+                                                              method="POST" 
+                                                              class="d-inline" 
+                                                              onsubmit="return confirm('Are you sure you want to delete all sales data for {{ $monthName }}?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                                <i class="fas fa-trash-alt"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </td>
+                                            @endif
                                         </tr>
                                         @php
                                             $previousSales = $currentSales;
@@ -86,7 +122,7 @@
                                     @endforeach
                                     <tr class="table-primary font-weight-bold">
                                         <td>Total</td>
-                                        <td>₱{{ number_format($totalSales, 2) }}</td>
+                                        <td colspan="{{ $isAdmin ? '2' : '1' }}">₱{{ number_format($totalSales, 2) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
