@@ -2,7 +2,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 
 document.addEventListener('DOMContentLoaded', function () {
  
-
     // Edit button functionality
     const editButtons = document.querySelectorAll('.edit-product');
     editButtons.forEach(button => {
@@ -16,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const size = this.dataset.size;
             const quantity = this.dataset.quantity;
             const price = this.dataset.price;
-
             const form = document.getElementById('editForm');
             if (form) {
                 form.action = `/admin/product/update/${id}`;

@@ -8,7 +8,6 @@
     @vite(['resources/js/inventory.js'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-
 </head>
 <body>
 
@@ -89,12 +88,12 @@
                             data-date="{{ $product->updated_at ? $product->updated_at : '' }}"
                             data-quantity="{{ $product->quantity }}"
                             data-price="{{ $product->price }}"
-                            data-bs-toggle="modal" 
+                            data-bs-toggle="modal"
                             data-bs-target="#editProductModal"
                             title="Edit"><i class="bi bi-pencil-square"></i></a>
-                            
+                           
                             <a href="{{ route('manager.product.delete', $product->product_id) }}"
-                            class="text-danger ms-2" 
+                            class="text-danger ms-2"
                             onclick="return confirm('Are you sure you want to delete this product?')">
                             <i class="bi bi-trash"></i>
                             </a>
@@ -237,7 +236,7 @@
                     </div>
 
                     <div class="row mb-3">
-                
+               
                         <div class="col-md-6">
                             <label for="edit-quantity" class="form-label">Quantity</label>
                             <input type="number" name="quantity" class="form-control" id="edit-quantity" required>
