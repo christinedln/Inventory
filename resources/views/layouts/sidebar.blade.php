@@ -29,10 +29,12 @@
                 <i class="bi bi-caret-down-fill transition" id="salesReportCaret"></i>
             </button>
 
+            <!-- Sales Report Dropdown -->
             <div class="collapse" id="salesReportCollapse">
                 <div class="border-start ms-3">
                     <ul class="nav flex-column ps-3 mt-1">
                         <li><a class="nav-link py-1" href="#">Daily Input Form</a></li>
+                        <li><a class="nav-link py-1" href="#">Target Input Form</a></li>
                         <li><a class="nav-link py-1" href="#">Monthly Sales Report</a></li>
                         <li><a class="nav-link py-1" href="#">Target Across Four Quarters</a></li>
                     </ul>
