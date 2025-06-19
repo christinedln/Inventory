@@ -11,6 +11,7 @@ export default defineConfig({
                 'resources/css/salesreport.css',
                 'resources/js/inventory.js',
                 'resources/js/salesreport.js',
+                'resources/js/sidebar.js',
                 'resources/js/dashboard.js',
                 'resources/js/notification.js'],
             refresh: true,

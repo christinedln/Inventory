@@ -1,19 +1,53 @@
+@php
+    $user = auth()->user();
+@endphp
+
+@if($user && $user->role === \App\Models\User::ROLE_ADMIN)
 <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
     <h4><strong>Cuffed</strong></h4>
     <ul class="nav flex-column">
         <li><a href="{{ route('admin.dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
         <li><a href="{{ route('inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
         <li><a href="{{ route('salesreport') }}" class="nav-link"><i class="bi bi-clipboard-data me-2"></i>Sales Report</a></li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-people me-2"></i>User Maintenance
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="#">User Accounts</a></li>
+                <li><a class="dropdown-item" href="#">Roles and Permissions</a></li>
+                <li><a class="dropdown-item" href="#">User Access Control</a></li>
+            </ul>
+        </li>
+        <li><a href="#" class="nav-link"><i class="bi bi-gear me-2"></i>Maintenance</a></li>
         <li><a href="#" class="nav-link active">
-            <i class="bi bi-bell me-2"></i>Notification
-            @if($unresolvedCount > 0)
+            <i class="bi bi-bell me-2"></i>Notifications
+            @if(isset($unresolvedCount) && $unresolvedCount > 0)
                 <span class="badge bg-danger">{{ $unresolvedCount }}</span>
             @endif
         </a></li>
     </ul>
 </div>
+@elseif($user && $user->role === \App\Models\User::ROLE_INVENTORY_MANAGER)
+<div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
+    <h4><strong>Cuffed</strong></h4>
+    <ul class="nav flex-column">
+        <li><a href="{{ route('manager.dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+        <li><a href="{{ route('inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
+        <li><a href="{{ route('salesreport') }}" class="nav-link"><i class="bi bi-clipboard-data me-2"></i>Sales Report</a></li>
+        <li><a href="#" class="nav-link"><i class="bi bi-gear me-2"></i>Maintenance</a></li>
+        <li><a href="#" class="nav-link active">
+            <i class="bi bi-bell me-2"></i>Notifications
+            @if(isset($unresolvedCount) && $unresolvedCount > 0)
+                <span class="badge bg-danger">{{ $unresolvedCount }}</span>
+            @endif
+        </a></li>
+    </ul>
+</div>
+@endif
 
 <!-- Offcanvas (mobile sidebar) -->
+@if($user && ($user->role === \App\Models\User::ROLE_ADMIN || $user->role === \App\Models\User::ROLE_INVENTORY_MANAGER))
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title">Inventory</h5>
@@ -21,15 +55,40 @@
     </div>
     <div class="offcanvas-body">
         <ul class="nav flex-column">
-            <li><a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a></li>
-            <li><a href="{{ route('inventory') }}" class="nav-link">Inventory</a></li>
-            <li><a href="{{ route('salesreport') }}" class="nav-link">Sales Report</a></li>
-            <li><a href="#" class="nav-link active">
-                Notification
-                @if($unresolvedCount > 0)
-                    <span class="badge bg-danger">{{ $unresolvedCount }}</span>
-                @endif
-            </a></li>
+            @if($user->role === \App\Models\User::ROLE_ADMIN)
+                <li><a href="{{ route('admin.dashboard') }}" class="nav-link">Dashboard</a></li>
+                <li><a href="{{ route('inventory') }}" class="nav-link">Inventory</a></li>
+                <li><a href="{{ route('salesreport') }}" class="nav-link">Sales Report</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdownMobile" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        User Maintenance
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="userDropdownMobile">
+                        <li><a class="dropdown-item" href="#">User Accounts</a></li>
+                        <li><a class="dropdown-item" href="#">Roles and Permissions</a></li>
+                        <li><a class="dropdown-item" href="#">User Access Control</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" class="nav-link">Maintenance</a></li>
+                <li><a href="#" class="nav-link active">
+                    Notifications
+                    @if(isset($unresolvedCount) && $unresolvedCount > 0)
+                        <span class="badge bg-danger">{{ $unresolvedCount }}</span>
+                    @endif
+                </a></li>
+            @elseif($user->role === \App\Models\User::ROLE_INVENTORY_MANAGER)
+                <li><a href="{{ route('manager.dashboard') }}" class="nav-link">Dashboard</a></li>
+                <li><a href="{{ route('inventory') }}" class="nav-link">Inventory</a></li>
+                <li><a href="{{ route('salesreport') }}" class="nav-link">Sales Report</a></li>
+                <li><a href="#" class="nav-link">Maintenance</a></li>
+                <li><a href="#" class="nav-link active">
+                    Notifications
+                    @if(isset($unresolvedCount) && $unresolvedCount > 0)
+                        <span class="badge bg-danger">{{ $unresolvedCount }}</span>
+                    @endif
+                </a></li>
+            @endif
         </ul>
     </div>
 </div>
+@endif
