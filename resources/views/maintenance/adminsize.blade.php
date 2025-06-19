@@ -22,13 +22,130 @@
     </div>
 </nav>
 
-<div class="container-fluid">
-    <div class="row">
+@extends('layouts.app')
 
-        @include('layouts.sidebar')
-    <!-- Main Content -->
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-                <h4>Size</h4>
-    </main>
+@section('content')
+    <h1>Sizes</h1>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    <div class="d-flex mb-3">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSizeModal">
+            Add Size
+        </button>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Size</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($sizes as $size)
+                <tr>
+                    <td>{{ $size->size_id }}</td>
+                    <td>{{ $size->size }}</td>
+                    <td>{{ $size->created_at }}</td>
+                    <td>
+                        <!-- Edit Button -->
+                        <button
+                            class="btn btn-sm btn-warning edit-size-btn"
+                            data-id="{{ $size->size_id }}"
+                            data-size="{{ $size->size }}"
+                            data-bs-toggle="modal"
+                            data-bs-target="#editSizeModal">
+                            Edit
+                        </button>
+                        <!-- Delete Button -->
+                        <form action="{{ route('maintenance.size.delete', $size->size_id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure you want to delete this size?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="4" class="text-center">No sizes found.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+
+    <!-- Add Size Modal -->
+    <div class="modal fade" id="addSizeModal" tabindex="-1" aria-labelledby="addSizeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" action="{{ route('maintenance.size.add') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addSizeModalLabel">Add Size</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="size" class="form-label">Size Name</label>
+                            <input type="text" name="size" class="form-control" id="size" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Size</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Size Modal -->
+    <div class="modal fade" id="editSizeModal" tabindex="-1" aria-labelledby="editSizeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" id="editSizeForm">
+                @csrf
+                @method('PUT')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editSizeModalLabel">Edit Size</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="edit-size" class="form-label">Size Name</label>
+                            <input type="text" name="size" class="form-control" id="edit-size" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update Size</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editButtons = document.querySelectorAll('.edit-size-btn');
+            const editForm = document.getElementById('editSizeForm');
+            const editSizeInput = document.getElementById('edit-size');
+
+            editButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const id = this.getAttribute('data-id');
+                    const size = this.getAttribute('data-size');
+                    editSizeInput.value = size;
+                    editForm.action = `/admin/maintenance/size/${id}`;
+                });
+            });
+        });
+    </script>
+@endsection
+
 </body>
 </html>

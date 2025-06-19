@@ -32,7 +32,80 @@
         @include('layouts.sidebar')
     <!-- Main Content -->
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
-                <h4>Categories</h4>
+        @extends('layouts.app')
+
+        @section('content')
+            <h1>Categories</h1>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Add Category</button>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Category</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($categories as $cat)
+                        <tr>
+                            <td>{{ $cat->category_id }}</td>
+                            <td>{{ $cat->category }}</td>
+                            <td>{{ $cat->created_at }}</td>
+                            <td>
+                                <!-- Edit Button (always shown) -->
+                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editCategoryModal-{{ $cat->category_id }}">
+                                    Edit
+                                </button>
+                                <!-- Edit Modal -->
+                                <div class="modal fade" id="editCategoryModal-{{ $cat->category_id }}" tabindex="-1" aria-labelledby="editCategoryModalLabel-{{ $cat->category_id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <form method="POST" action="{{ route('maintenance.category.update', $cat->category_id) }}">
+                                            @csrf
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editCategoryModalLabel-{{ $cat->category_id }}">Edit Category</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input type="text" name="category" class="form-control" value="{{ $cat->category }}" required>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <!-- No Delete button for inventory manager -->
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <!-- Add Category Modal -->
+            <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form method="POST" action="{{ route('maintenance.category.add') }}">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" name="category" class="form-control" placeholder="Category Name" required>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        @endsection
     </main>
 </body>
 </html>

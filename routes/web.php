@@ -46,10 +46,19 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/notification', [AdminNotificationController::class, 'index'])->name('admin.notification');
     Route::post('/notifications/{id}/resolve', [AdminNotificationController::class, 'resolve'])->name('admin.notifications.resolve');
     Route::post('/notifications/{id}/toggle-status', [AdminNotificationController::class, 'toggleStatus'])->name('admin.notifications.toggleStatus');
-    Route::get('/maintenance/category', [AdminCategoryController::class, 'index'])->name('admin.maintenance.category');
-    Route::get('/maintenance/size', [AdminSizeController::class, 'index'])->name('admin.maintenance.size');
-    Route::get('/maintenance/category', [CategoryController::class, 'index'])->name('admin.maintenance.category');
-    Route::get('/maintenance/size', [SizeController::class, 'index'])->name('admin.maintenance.size');
+    // Admin Maintenance: Categories
+    Route::get('/maintenance/category', [CategoryController::class, 'index'])->name('maintenance.category');
+    Route::post('/maintenance/category/add', [CategoryController::class, 'store'])->name('maintenance.category.add');
+    Route::delete('/maintenance/category/{category}', [CategoryController::class, 'destroy'])->name('maintenance.category.delete');
+    Route::put('/maintenance/category/{category}', [CategoryController::class, 'update'])->name('maintenance.category.update');
+    Route::get('/maintenance/category/{category}/edit', [CategoryController::class, 'edit'])->name('maintenance.category.edit');
+    // Admin Maintenance: Sizes
+    Route::get('/maintenance/size', [SizeController::class, 'index'])->name('maintenance.size');
+    Route::post('/maintenance/size/add', [SizeController::class, 'store'])->name('maintenance.size.add');
+    Route::delete('/maintenance/size/{size}', [SizeController::class, 'destroy'])->name('maintenance.size.delete');
+    Route::put('/maintenance/size/{size}', [SizeController::class, 'update'])->name('maintenance.size.update');
+    Route::get('/maintenance/size/{size}/edit', [SizeController::class, 'edit'])->name('maintenance.size.edit');
+
 });
 
 Route::middleware(['auth'])->prefix('manager')->group(function () {
@@ -105,4 +114,9 @@ Route::prefix('sales-report')
         Route::delete('/target-input/{id}', [TargetInputFormController::class, 'destroy'])->name('target-input.destroy');
 
         Route::get('/quarterly-sales', [QuarterlySalesController::class, 'index'])->name('quarterly-sales.index');
+
+
+        Route::put('/admin/maintenance/category/{category}', [\App\Http\Controllers\Maintenance\CategoryController::class, 'update'])->name('maintenance.category.update');
+        Route::get('/admin/maintenance/category/{category}/edit', [\App\Http\Controllers\Maintenance\CategoryController::class, 'edit'])->name('maintenance.category.edit');
+        Route::delete('/admin/maintenance/category/{category}', [\App\Http\Controllers\Maintenance\CategoryController::class, 'destroy'])->name('maintenance.category.delete');
     });
