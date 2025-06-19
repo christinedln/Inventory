@@ -6,6 +6,11 @@ use App\Models\User;
 use App\Http\Controllers\InventoryManagerController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Manager\ManagerDashboardController;
+use App\Http\Controllers\Admin\AdminInventoryController;
+use App\Http\Controllers\Manager\ManagerInventoryController;
+use App\Http\Controllers\Admin\AdminNotificationController;
+use App\Http\Controllers\Manager\ManagerNotificationController;
+use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DailyInputController;
@@ -28,11 +33,30 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::post('/inventory', [AdminInventoryController::class, 'store'])->name('admin.inventory.store');
+    Route::get('/inventory', [AdminInventoryController::class, 'index'])->name('admin.inventory');
+    Route::get('/product/delete/{id}', [AdminInventoryController::class, 'delete'])->name('admin.product.delete');
+    Route::post('/product/update/{id}', [AdminInventoryController::class, 'update'])->name('admin.products.update');
+    Route::get('/notification', [AdminNotificationController::class, 'index'])->name('admin.notification');
+    Route::post('/notifications/{id}/resolve', [AdminNotificationController::class, 'resolve'])->name('admin.notifications.resolve');
+    Route::post('/notifications/{id}/toggle-status', [AdminNotificationController::class, 'toggleStatus'])->name('admin.notifications.toggleStatus');
 });
 
 Route::middleware(['auth'])->prefix('manager')->group(function () {
     Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('manager.dashboard');
+    Route::post('/inventory', [ManagerInventoryController::class, 'store'])->name('manager.inventory.store');
+    Route::get('/inventory', [ManagerInventoryController::class, 'index'])->name('manager.inventory');
+    Route::get('/product/delete/{id}', [ManagerInventoryController::class, 'delete'])->name('manager.product.delete');
+    Route::post('/product/update/{id}', [ManagerInventoryController::class, 'update'])->name('manager.products.update');
+    Route::get('/notification', [ManagerNotificationController::class, 'index'])->name('manager.notification');
+    Route::post('/notifications/{id}/resolve', [ManagerNotificationController::class, 'resolve'])->name('manager.notifications.resolve');
+    Route::post('/notifications/{id}/toggle-status', [ManagerNotificationController::class, 'toggleStatus'])->name('manager.notifications.toggleStatus');
 });
+
+//Route::post('/inventory', [ProductController::class, 'store'])->name('inventory.store');
+//Route::get('/inventory', [ProductController::class, 'index'])->name('inventory');
+//Route::get('/product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
+//Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('products.update');
 
 // User routes
 Route::middleware(['auth'])->prefix('user')->group(function () {
@@ -49,14 +73,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::post('/inventory', [ProductController::class, 'store'])->name('inventory.store');
-Route::get('/inventory', [ProductController::class, 'index'])->name('inventory');
-Route::get('/product/delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
-Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('products.update');
-
-Route::get('/notification', [NotificationController::class, 'index'])->name('notification');
-Route::post('/notifications/{id}/resolve', [NotificationController::class, 'resolve'])->name('notifications.resolve');
-Route::post('/notifications/{id}/toggle-status', [NotificationController::class, 'toggleStatus'])->name('notifications.toggleStatus');
-
 Route::get('/sales-report/daily-input', [DailyInputController::class, 'index'])->name('daily-sales.index');
 Route::post('/sales-report/daily-input', [DailyInputController::class, 'store'])->name('daily-sales.store');
+Route::get('/salesreport', [SalesReportController::class, 'index'])->name('salesreport');

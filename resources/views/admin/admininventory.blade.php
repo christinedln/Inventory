@@ -1,5 +1,3 @@
-<?php
-/*
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,35 +26,7 @@
     <div class="row">
 
         <!-- Sidebar -->
-        <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
-            <h4><strong>Cuffed</strong></h4>
-            <ul class="nav flex-column">
-                <li><a href="{{ route('dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-                <li><a href="#" class="nav-link active"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
-                <li><a href="{{ route('salesreport') }}" class="nav-link"><i class="bi bi-clipboard-data me-2"></i>Sales Report</a></li>
-                <li><a href="{{ route('notification') }}" class="nav-link"><i class="bi bi-bell me-2"></i>Notification @if($unresolvedCount > 0)
-            <span class="badge bg-danger">{{ $unresolvedCount }}</span>
-        @endif </a></li>
-            </ul>
-        </div>
-
-        <!-- Offcanvas for small screens -->
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title">Inventory</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="nav flex-column">
-                    <li><a href="{{ route('dashboard') }}" class="nav-link">Dashboard</a></li>
-                    <li><a href="#" class="nav-link active">Inventory</a></li>
-                    <li><a href="{{ route('salesreport') }}" class="nav-link">Sales Report</a></li>
-                    <li><a href="{{ route('notification') }}" class="nav-link">Notification @if($unresolvedCount > 0)
-            <span class="badge bg-danger">{{ $unresolvedCount }}</span>
-        @endif</a></li>
-                </ul>
-            </div>
-        </div>
+        @include('layouts.sidebar')
 
     <!-- Main Content -->
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
@@ -109,7 +79,7 @@
                         <td>{{ $product->quantity }}</td>
                         <td>₱{{ number_format($product->price, 2) }}</td>
                         <td>
-                            <a href="#" 
+                            <a href="{{ route('admin.products.update' }}"
                             class="edit-product"
                             data-id="{{ $product->product_id }}"
                             data-product_name="{{ e($product->product_name) }}"
@@ -123,7 +93,7 @@
                             data-bs-target="#editProductModal"
                             title="Edit"><i class="bi bi-pencil-square"></i></a>
                             
-                            <a href="{{ url('/product/delete/' . $product->product_id) }}" 
+                            <a href="{{ route('manager.product.delete', $product->product_id) }}"
                             class="text-danger ms-2" 
                             onclick="return confirm('Are you sure you want to delete this product?')">
                             <i class="bi bi-trash"></i>
@@ -151,7 +121,7 @@
             </div>
             <div class="modal-body">
 
-                <form method="POST" action="{{ route('inventory.store') }}">
+                <form method="POST" action="{{ route('admin.inventory.store') }}">
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -294,5 +264,3 @@
 
 </body>
 </html>
-*/
-?>

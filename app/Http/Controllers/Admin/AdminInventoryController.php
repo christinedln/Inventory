@@ -1,15 +1,16 @@
 <?php
 
-/*
-namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Admin;
 
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use App\Http\Controllers\Controller;
 
 
-class ProductController extends Controller
+class AdminInventoryController extends Controller
 {
     // Display the product inventory with pagination
     public function index(Request $request)
@@ -18,7 +19,7 @@ class ProductController extends Controller
 
         $products = Product::orderBy('product_id', 'desc')->paginate(10);
 
-        return view('inventory', compact('products', 'highlightId'));
+        return view('admin.admininventory', compact('products', 'highlightId'));
     }
 
     //Store a new product in the products table
@@ -50,7 +51,7 @@ class ProductController extends Controller
         Product::create($validated);
 
 
-        return redirect('inventory')->with('success', 'Product added successfully!');
+        return redirect()->route('admin.inventory')->with('success', 'Product added successfully!');
     }
 
 
@@ -110,9 +111,9 @@ class ProductController extends Controller
         }
 
 
-        return redirect('inventory')->with('success', 'Product updated successfully!');
+        return redirect()->route('admin.inventory')->with('success', 'Product updated successfully!');
     }
 }
 
-*/
+
 

@@ -1,15 +1,16 @@
 <?php
 
-/*
-namespace App\Http\Controllers;
+
+namespace App\Http\Controllers\Manager;
 
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use App\Http\Controllers\Controller;
 
 
-class ProductController extends Controller
+class ManagerInventoryController extends Controller
 {
     // Display the product inventory with pagination
     public function index(Request $request)
@@ -18,7 +19,7 @@ class ProductController extends Controller
 
         $products = Product::orderBy('product_id', 'desc')->paginate(10);
 
-        return view('inventory', compact('products', 'highlightId'));
+        return view('manager.inventory', compact('products', 'highlightId'));
     }
 
     //Store a new product in the products table
@@ -114,5 +115,5 @@ class ProductController extends Controller
     }
 }
 
-*/
+
 

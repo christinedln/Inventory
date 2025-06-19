@@ -22,10 +22,6 @@
                 </button>
                 <span class="navbar-brand mb-0 h1">Cuffed</span>
             </div>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
-            </form>
         </div>
     </div>
 </nav>
