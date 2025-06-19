@@ -6,23 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('daily_sales', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->decimal('daily_revenue', 10, 2);
+            $table->decimal('daily_revenue', 10, 2)->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('daily_sales');
     }

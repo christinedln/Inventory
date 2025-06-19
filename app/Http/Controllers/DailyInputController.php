@@ -10,7 +10,7 @@ class DailyInputController extends Controller
     public function index(Request $request)
     {
         $today = Carbon::now()->format('Y-m-d');
-        $entries = DailySales::latest()->get();
+        $entries = DailySales::orderBy('date', 'desc')->get();
         
         return view('sales-report.daily-input', compact('today', 'entries'));
     }
@@ -28,5 +28,13 @@ class DailyInputController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Daily sales recorded successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $entry = DailySales::findOrFail($id);
+        $entry->delete();
+        
+        return redirect()->back()->with('success', 'Sales entry deleted successfully!');
     }
 }

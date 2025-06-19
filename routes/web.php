@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\AdminInventoryController;
 use App\Http\Controllers\Manager\ManagerInventoryController;
 use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Manager\ManagerNotificationController;
-use App\Http\Controllers\SalesReportController;
+use App\Http\Controllers\MonthlySalesReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DailyInputController;
@@ -75,4 +75,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/sales-report/daily-input', [DailyInputController::class, 'index'])->name('daily-sales.index');
 Route::post('/sales-report/daily-input', [DailyInputController::class, 'store'])->name('daily-sales.store');
-Route::get('/salesreport', [SalesReportController::class, 'index'])->name('salesreport');
+Route::delete('/daily-sales/{id}', [DailyInputController::class, 'destroy'])->name('daily-sales.destroy');
+Route::get('/sales-report/monthly-sales', [MonthlySalesReportController::class, 'index'])->name('monthly-sales.index');
+Route::post('/sales-report/monthly-sales/export', [MonthlySalesReportController::class, 'export'])->name('monthly-sales.export');

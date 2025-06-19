@@ -15,7 +15,7 @@
             margin-top: 20px;
         }
         .thead-dark {
-            background-color: #343a40;
+            background-color: #0d6efd;
             color: white;
         }
         .table td {
@@ -25,7 +25,7 @@
             max-width: 800px;
         }
         .history-table th {
-            background-color: #343a40;
+            background-color: #0d6efd;
             color: white;
         }
         .modal-body {
@@ -38,7 +38,7 @@
             z-index: 1;
         }
         .history-table thead th {
-            background-color: #343a40;
+            background-color: #0d6efd;
             color: white;
         }
         .action-buttons {
@@ -116,7 +116,7 @@
     <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-dark text-white">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="historyModalLabel">Sales History</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -128,14 +128,25 @@
                                     <th>Date</th>
                                     <th>Daily Revenue</th>
                                     <th>Entry Time</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($entries as $entry)
+                                @foreach($entries->sortByDesc('date') as $entry)
                                 <tr>
                                     <td>{{ $entry->date->format('M d, Y') }}</td>
                                     <td>₱ {{ number_format($entry->daily_revenue, 2) }}</td>
                                     <td>{{ $entry->created_at->format('h:i A') }}</td>
+                                    <td class="text-center">
+                                        <form action="{{ route('daily-sales.destroy', $entry->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                                onclick="return confirm('Are you sure you want to delete this entry?')">
+                                                <i class="far fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
