@@ -9,6 +9,7 @@ use App\Http\Controllers\Manager\ManagerDashboardController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\DailyInputController;
 
 // Guest routes
 Route::middleware('guest')->group(function () {
@@ -58,4 +59,5 @@ Route::get('/notification', [NotificationController::class, 'index'])->name('not
 Route::post('/notifications/{id}/resolve', [NotificationController::class, 'resolve'])->name('notifications.resolve');
 Route::post('/notifications/{id}/toggle-status', [NotificationController::class, 'toggleStatus'])->name('notifications.toggleStatus');
 
-Route::get('/salesreport', [SalesReportController::class, 'index'])->name('salesreport');
+Route::get('/sales-report/daily-input', [DailyInputController::class, 'index'])->name('daily-sales.index');
+Route::post('/sales-report/daily-input', [DailyInputController::class, 'store'])->name('daily-sales.store');

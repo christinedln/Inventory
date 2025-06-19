@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             ManagerUserSeeder::class,
             ProductsTableSeeder::class,
-            SalesReportSeeder::class,
+            DailySalesSeeder::class,
         ]);
     }
 }
