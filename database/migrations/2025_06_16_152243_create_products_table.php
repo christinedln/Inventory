@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('size', 20);
             $table->integer('quantity');
             $table->decimal('price', 10, 2);
+            $table->string('image_path');
+            $table->string('last_reason', 1000)->nullable();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }

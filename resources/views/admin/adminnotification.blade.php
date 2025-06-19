@@ -66,7 +66,7 @@
                                 @if($notification->category === 'inventory')
                                 <div class="d-flex flex-column flex-md-row align-items-center gap-1">
 
-                                    <form action="{{ route('notifications.resolve', $notification->notifiable_id) }}" method="POST">
+                                    <form action="{{ route('admin.notifications.resolve', $notification->notifiable_id) }}" method="POST">
                                         @csrf
                                         <button type="submit"
                                             class="btn btn-sm {{ $notification->status === 'unresolved' ? 'btn-primary' : 'btn-outline-secondary' }}"
