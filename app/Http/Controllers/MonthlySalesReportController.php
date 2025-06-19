@@ -41,19 +41,43 @@ class MonthlySalesReportController extends Controller
         // Write headers
         fputcsv($handle, ['Date', 'Revenue']);
 
-        // Write data rows
-        $total = 0;
+        // Group sales by month
+        $monthlySales = [];
+        $grandTotal = 0;
+
         foreach ($sales as $sale) {
-            // Format date as text to prevent Excel from converting it
-            fputcsv($handle, [
-                "'" . $sale->date->format('Y-m-d'),  // Add single quote to force text format
-                sprintf('%.2f', $sale->daily_revenue) // Format number with 2 decimal places
-            ]);
-            $total += $sale->daily_revenue;
+            $monthKey = $sale->date->format('Y-m');
+            if (!isset($monthlySales[$monthKey])) {
+                $monthlySales[$monthKey] = [
+                    'sales' => [],
+                    'total' => 0
+                ];
+            }
+            $monthlySales[$monthKey]['sales'][] = $sale;
+            $monthlySales[$monthKey]['total'] += $sale->daily_revenue;
+            $grandTotal += $sale->daily_revenue;
         }
 
-        // Write total row
-        fputcsv($handle, ['Total', sprintf('%.2f', $total)]);
+        // Write data rows with monthly totals
+        foreach ($monthlySales as $month => $data) {
+            // Write month header
+            fputcsv($handle, [$data['sales'][0]->date->format('F Y'), '']);
+
+            // Write daily sales
+            foreach ($data['sales'] as $sale) {
+                fputcsv($handle, [
+                    "'" . $sale->date->format('Y-m-d'),
+                    sprintf('%.2f', $sale->daily_revenue)
+                ]);
+            }
+
+            // Write monthly total
+            fputcsv($handle, ['Monthly Total', sprintf('%.2f', $data['total'])]);
+            fputcsv($handle, ['', '']); // Empty line for spacing
+        }
+
+        // Write grand total
+        fputcsv($handle, ['Grand Total', sprintf('%.2f', $grandTotal)]);
 
         rewind($handle);
         $csv = stream_get_contents($handle);
