@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 @vite(['resources/js/sidebar.js'])
 
-@if($user && $user->role === \App\Models\User::ROLE_ADMIN)
+@if($user && $user->role === \App\Models\User::ROLE_ADMIN || $user->role === \App\Models\User::ROLE_INVENTORY_MANAGER);
 <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
     <h4><strong>Cuffed</strong></h4>
     <ul class="nav flex-column">
