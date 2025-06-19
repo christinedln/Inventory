@@ -79,7 +79,7 @@
                         <td>{{ $product->quantity }}</td>
                         <td>₱{{ number_format($product->price, 2) }}</td>
                         <td>
-                            <a href="{{ route('admin.products.update' }}"
+                            <a href="{{ route('admin.products.update') }}"
                             class="edit-product"
                             data-id="{{ $product->product_id }}"
                             data-product_name="{{ e($product->product_name) }}"
