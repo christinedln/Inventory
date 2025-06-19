@@ -14,6 +14,14 @@ function closeSalesReportDropdown() {
     }
 }
 
+function closeMaintenanceDropdown() {
+    const collapseDiv = document.getElementById('maintenanceCollapse');
+    if (collapseDiv && collapseDiv.classList.contains('show')) {
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseDiv);
+        bsCollapse.hide();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     // User Maintenance caret
     const caretIcon = document.getElementById('caretIcon');
@@ -24,6 +32,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const salesCaret = document.getElementById('salesReportCaret');
     const salesCollapse = document.getElementById('salesReportCollapse');
     const salesToggle = document.getElementById('salesReportToggle');
+
+    // Maintenance caret
+    const maintenanceCaret = document.getElementById('maintenanceCaret');
+    const maintenanceCollapse = document.getElementById('maintenanceCollapse');
+    const maintenanceToggle = document.getElementById('maintenanceToggle');
 
     // Add CSS for caret rotation
     const style = document.createElement('style');
@@ -55,6 +68,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Maintenance caret rotation
+    if (maintenanceCaret && maintenanceCollapse) {
+        maintenanceCollapse.addEventListener('show.bs.collapse', () => {
+            maintenanceCaret.classList.add('rotate-caret');
+        });
+        maintenanceCollapse.addEventListener('hide.bs.collapse', () => {
+            maintenanceCaret.classList.remove('rotate-caret');
+        });
+    }
+
     // Close dropdowns when clicking outside
     document.addEventListener('click', function (e) {
         // User Maintenance
@@ -76,6 +99,16 @@ document.addEventListener('DOMContentLoaded', function () {
             salesCollapse.classList.contains('show')
         ) {
             closeSalesReportDropdown();
+        }
+        // Maintenance
+        if (
+            maintenanceToggle &&
+            maintenanceCollapse &&
+            !maintenanceToggle.contains(e.target) &&
+            !maintenanceCollapse.contains(e.target) &&
+            maintenanceCollapse.classList.contains('show')
+        ) {
+            closeMaintenanceDropdown();
         }
     });
 });
