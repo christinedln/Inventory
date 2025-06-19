@@ -20,6 +20,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DailyInputController;
 use App\Http\Controllers\TargetInputFormController;
 use App\Http\Controllers\QuarterlySalesController;
+use App\Http\Middleware\NoCacheHeaders;
 
 // Guest routes
 Route::middleware('guest')->group(function () {
@@ -37,7 +38,7 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', NoCacheHeaders::class])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/inventory', [AdminInventoryController::class, 'store'])->name('admin.inventory.store');
     Route::get('/inventory', [AdminInventoryController::class, 'index'])->name('admin.inventory');
@@ -52,7 +53,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/maintenance/size', [SizeController::class, 'index'])->name('admin.maintenance.size');
 });
 
-Route::middleware(['auth'])->prefix('manager')->group(function () {
+Route::middleware(['auth', NoCacheHeaders::class])->prefix('manager')->group(function () {
     Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('manager.dashboard');
     Route::post('/inventory', [ManagerInventoryController::class, 'store'])->name('manager.inventory.store');
     Route::get('/inventory', [ManagerInventoryController::class, 'index'])->name('manager.inventory');
@@ -71,7 +72,7 @@ Route::middleware(['auth'])->prefix('manager')->group(function () {
 //Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('products.update');
 
 // User routes
-Route::middleware(['auth'])->prefix('user')->group(function () {
+Route::middleware(['auth', NoCacheHeaders::class])->prefix('user')->group(function () {
     Route::get('/dashboard', function () {
         if (auth()->user()->role !== User::ROLE_USER) {
             return redirect()->route(auth()->user()->getDashboardRoute());
@@ -81,13 +82,13 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
 });
 
 // Shared authenticated routes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', NoCacheHeaders::class])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 Route::prefix('sales-report')
     ->name('sales-report.')
-    ->middleware(['auth'])  // Only use auth middleware here
+    ->middleware(['auth', NoCacheHeaders::class])
     ->group(function () {
         Route::get('/daily-sales', [DailyInputController::class, 'index'])->name('daily-sales.index');
         Route::post('/daily-sales', [DailyInputController::class, 'store'])->name('daily-sales.store');
