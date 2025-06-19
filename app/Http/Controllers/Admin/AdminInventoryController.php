@@ -111,7 +111,7 @@ class AdminInventoryController extends Controller
         }
 
 
-        return redirect()->route('admin.inventory')->with('success', 'Product updated successfully!');
+        return redirect('inventory')->with('success', 'Product updated successfully!');
     }
 }
 

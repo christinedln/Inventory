@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const form = document.getElementById('editForm');
             if (form) {
-                form.action = `/product/update/${id}`;
+                form.action = `/admin/product/update/${id}`;
             }
 
             document.getElementById('edit-productName').value = product_name;
