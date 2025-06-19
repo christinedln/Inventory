@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Manager\ManagerNotificationController;
 use App\Http\Controllers\Maintenance\AdminCategoryController;
 use App\Http\Controllers\Maintenance\AdminSizeController;
+use App\Http\Controllers\Maintenance\CategoryController;
+use App\Http\Controllers\Maintenance\SizeController;
 use App\Http\Controllers\MonthlySalesReportController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\NotificationController;
@@ -44,6 +46,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::post('/notifications/{id}/toggle-status', [AdminNotificationController::class, 'toggleStatus'])->name('admin.notifications.toggleStatus');
     Route::get('/maintenance/category', [AdminCategoryController::class, 'index'])->name('admin.maintenance.category');
     Route::get('/maintenance/size', [AdminSizeController::class, 'index'])->name('admin.maintenance.size');
+    Route::get('/maintenance/category', [CategoryController::class, 'index'])->name('admin.maintenance.category');
+    Route::get('/maintenance/size', [SizeController::class, 'index'])->name('admin.maintenance.size');
 });
 
 Route::middleware(['auth'])->prefix('manager')->group(function () {
@@ -55,6 +59,8 @@ Route::middleware(['auth'])->prefix('manager')->group(function () {
     Route::get('/notification', [ManagerNotificationController::class, 'index'])->name('manager.notification');
     Route::post('/notifications/{id}/resolve', [ManagerNotificationController::class, 'resolve'])->name('manager.notifications.resolve');
     Route::post('/notifications/{id}/toggle-status', [ManagerNotificationController::class, 'toggleStatus'])->name('manager.notifications.toggleStatus');
+    Route::get('/maintenance/category', [CategoryController::class, 'index'])->name('manager.maintenance.category');
+    Route::get('/maintenance/size', [SizeController::class, 'index'])->name('manager.maintenance.size');
 });
 
 //Route::post('/inventory', [ProductController::class, 'store'])->name('inventory.store');
