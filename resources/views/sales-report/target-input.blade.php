@@ -44,7 +44,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('target-input.store') }}" method="POST">
+                <form action="{{ route('sales-report.target-input.store') }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="quarter" class="form-label">Select Quarter</label>
@@ -83,7 +83,7 @@
                                     <td>Q{{ $target->quarter }}</td>
                                     <td>${{ number_format($target->target_revenue, 2) }}</td>
                                     <td>
-                                        <form action="{{ route('target-input.destroy', $target->id) }}" method="POST" class="d-inline">
+                                        <form action="{{ route('sales-report.target-input.destroy', $target->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>

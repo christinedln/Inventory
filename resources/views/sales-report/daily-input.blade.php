@@ -72,7 +72,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('daily-sales.store') }}" method="POST">
+                <form action="{{ route('sales-report.daily-sales.store') }}" method="POST">
                     @csrf
                     <!-- Input Table -->
                     <div class="table-responsive input-table">
@@ -138,7 +138,7 @@
                                     <td>₱ {{ number_format($entry->daily_revenue, 2) }}</td>
                                     <td>{{ $entry->created_at->format('h:i A') }}</td>
                                     <td class="text-center">
-                                        <form action="{{ route('daily-sales.destroy', $entry->id) }}" method="POST" class="d-inline">
+                                        <form action="{{ route('sales-report.daily-sales.destroy', $entry->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-outline-danger btn-sm" 

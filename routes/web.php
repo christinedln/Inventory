@@ -85,15 +85,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-Route::get('/sales-report/daily-input', [DailyInputController::class, 'index'])->name('daily-sales.index');
-Route::post('/sales-report/daily-input', [DailyInputController::class, 'store'])->name('daily-sales.store');
-Route::delete('/daily-sales/{id}', [DailyInputController::class, 'destroy'])->name('daily-sales.destroy');
+Route::prefix('sales-report')->name('sales-report.')->group(function () {
+    Route::get('/daily-sales', [DailyInputController::class, 'index'])->name('daily-sales.index');
+    Route::post('/daily-sales', [DailyInputController::class, 'store'])->name('daily-sales.store');
+    Route::delete('/daily-sales/{id}', [DailyInputController::class, 'destroy'])->name('daily-sales.destroy');
 
-Route::get('/sales-report/monthly-sales', [MonthlySalesReportController::class, 'index'])->name('monthly-sales.index');
-Route::post('/sales-report/monthly-sales/export', [MonthlySalesReportController::class, 'export'])->name('monthly-sales.export');
+    Route::get('/monthly-sales', [MonthlySalesReportController::class, 'index'])->name('monthly-sales.index');
+    Route::post('/monthly-sales/export', [MonthlySalesReportController::class, 'export'])->name('monthly-sales.export');
 
-Route::get('/sales-report/target-input', [TargetInputFormController::class, 'index'])->name('target-input.index');
-Route::post('/sales-report/target-input', [TargetInputFormController::class, 'store'])->name('target-input.store');
-Route::delete('/sales-report/target-input/{id}', [TargetInputFormController::class, 'destroy'])->name('target-input.destroy');
+    Route::get('/target-input', [TargetInputFormController::class, 'index'])->name('target-input.index');
+    Route::post('/target-input', [TargetInputFormController::class, 'store'])->name('target-input.store');
+    Route::delete('/target-input/{id}', [TargetInputFormController::class, 'destroy'])->name('target-input.destroy');
 
-Route::get('/sales-report/quarterly-sales', [QuarterlySalesController::class, 'index'])->name('quarterly-sales.index');
+    Route::get('/quarterly-sales', [QuarterlySalesController::class, 'index'])->name('quarterly-sales.index');
+});

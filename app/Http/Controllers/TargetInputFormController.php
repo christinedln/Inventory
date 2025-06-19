@@ -32,7 +32,7 @@ class TargetInputFormController extends Controller
             'target_revenue' => $request->target_revenue
         ]);
 
-        return redirect()->route('target-input.index')
+        return redirect()->route('sales-report.target-input.index')
             ->with('success', 'Quarterly target has been set successfully.');
     }
 
@@ -41,7 +41,7 @@ class TargetInputFormController extends Controller
         $target = TargetInputForm::findOrFail($id);
         $target->delete();
 
-        return redirect()->route('target-input.index')
+        return redirect()->route('sales-report.target-input.index')
             ->with('success', 'Target has been deleted successfully.');
     }
 }

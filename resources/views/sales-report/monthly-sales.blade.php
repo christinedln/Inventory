@@ -29,7 +29,7 @@
                 <div class="card">
                     <div class="card-header position-relative">
                         <h2 class="mb-0">Monthly Sales Report - {{ $currentYear }}</h2>
-                        <form action="{{ route('monthly-sales.export') }}" method="POST" class="d-inline">
+                        <form action="{{ route('sales-report.monthly-sales.export') }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-success export-button">
                                 <i class="fas fa-file-export me-2"></i>Export
