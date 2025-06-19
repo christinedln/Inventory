@@ -88,7 +88,7 @@
         </li>
 
 
-        <li><a href="#" class="nav-link active"><i class="bi bi-bell me-2"></i>Notifications
+        <li><a href="{{ route('admin.notification') }}" class="nav-link active"><i class="bi bi-bell me-2"></i>Notifications
             @if(isset($unresolvedCount) && $unresolvedCount > 0)
                 <span class="badge bg-danger">{{ $unresolvedCount }}</span>
             @endif

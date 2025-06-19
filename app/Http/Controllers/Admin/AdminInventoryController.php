@@ -1,24 +1,20 @@
 <?php
 
-
 namespace App\Http\Controllers\Admin;
-
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Http\Controllers\Controller;
 
-
 class AdminInventoryController extends Controller
 {
     // Display the product inventory with pagination
     public function index(Request $request)
     {
-        $highlightId = session('highlight_id'); 
+        $highlightId = session('highlight_id');
 
         $products = Product::orderBy('product_id', 'desc')->paginate(10);
-
         return view('admin.admininventory', compact('products', 'highlightId'));
     }
 
@@ -47,20 +43,15 @@ class AdminInventoryController extends Controller
         ])->withInput();
     }
 
-
         Product::create($validated);
-
 
         return redirect()->route('admin.inventory')->with('success', 'Product added successfully!');
     }
-
 
     // Delete a product by its ID
     public function delete($id)
     {
         DB::table('products')->where('product_id', $id)->delete();
-
-
         return redirect()->back()->with('success', 'Product deleted successfully!');
     }
 
@@ -87,8 +78,7 @@ class AdminInventoryController extends Controller
 
         $product = Product::findOrFail($id);
         $product->update($data);
-
-            
+           
         if ($product->quantity < 10) {
             $latestNotification = DB::table('notifications')
                 ->where('notification', "{$product->product_name} is low on stock")
@@ -110,10 +100,6 @@ class AdminInventoryController extends Controller
             }
         }
 
-
-        return redirect('inventory')->with('success', 'Product updated successfully!');
+        return redirect()->route('admin.inventory')->with('success', 'Product updated successfully!');
     }
 }
-
-
-
