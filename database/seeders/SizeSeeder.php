@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use App\Models\Size;
 
 class SizeSeeder extends Seeder
@@ -12,7 +13,10 @@ class SizeSeeder extends Seeder
      */
     public function run(): void
     {
-        $sizes = ['Small', 'Medium', 'Large', 'Extra Large', 'XXL', 'XXXL'];
+        // Truncate the sizes table before seeding
+        DB::table('sizes')->truncate();
+
+        $sizes = ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
 
         foreach ($sizes as $size) {
             Size::firstOrCreate(['size' => $size]);
