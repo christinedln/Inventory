@@ -81,6 +81,7 @@ class SizeController extends Controller
     $size->size = $request->size;
     $size->save();
 
+
     if ($user->role === 'admin') {
         return redirect()->route('admin.maintenance.size')->with('success', 'Size updated!');
     } elseif ($user->role === 'manager') {
