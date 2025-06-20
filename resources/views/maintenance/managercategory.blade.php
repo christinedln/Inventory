@@ -60,7 +60,7 @@
                                 <!-- Edit Modal -->
                                 <div class="modal fade" id="editCategoryModal-{{ $cat->category_id }}" tabindex="-1" aria-labelledby="editCategoryModalLabel-{{ $cat->category_id }}" aria-hidden="true">
                                     <div class="modal-dialog">
-                                        <form method="POST" action="{{ route('maintenance.category.update', $cat->category_id) }}">
+                                        <form method="POST" action="{{ route('manager.maintenance.category.update', $cat->category_id) }}">
                                             @csrf
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -87,7 +87,7 @@
             <!-- Add Category Modal -->
             <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
-                    <form method="POST" action="{{ route('maintenance.category.add') }}">
+                    <form method="POST" action="{{ route('manager.maintenance.category.add') }}">
                         @csrf
                         <div class="modal-content">
                             <div class="modal-header">

@@ -33,49 +33,78 @@ class CategoryController extends Controller
 
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'category' => 'required|string|max:255|unique:categories,category',
-        ]);
+{
+    $request->validate([
+        'category' => 'required|string|max:255|unique:categories,category',
+    ]);
 
+    Category::create([
+        'category' => $request->category,
+    ]);
 
-        Category::create([
-            'category' => $request->category,
-        ]);
+    // Check the role of the logged-in user
+    $user = auth()->user();
 
-
-        return redirect()->route('maintenance.category')->with('success', 'Category added!');
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.maintenance.category')->with('success', 'Category added!');
+    } elseif ($user->role === 'manager') {
+        return redirect()->route('manager.maintenance.category')->with('success', 'Category added!');
+    } else {
+        abort(403, 'Unauthorized action.');
     }
+}
+
 public function edit($id)
 {
     $category = Category::findOrFail($id);
-    $role = Auth::user()->role;
-    return view('maintenance.editcategory', compact('category', 'role'));
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        return view('maintenance.admincategory', compact('category'));
+    } elseif ($user->role === 'manager') {
+        return view('manager.maintenance.managercategory', compact('category'));
+    } else {
+        abort(403, 'Unauthorized action.');
+    }
 }
+
 
 public function update(Request $request, $id)
 {
     $request->validate([
         'category' => 'required|string|max:255|unique:categories,category,' . $id . ',category_id',
     ]);
+
     $category = Category::findOrFail($id);
     $category->category = $request->category;
     $category->save();
 
-    return redirect()->route('maintenance.category')->with('success', 'Category updated!');
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.maintenance.category')->with('success', 'Category updated!');
+    } elseif ($user->role === 'manager') {
+        return redirect()->route('manager.maintenance.category')->with('success', 'Category updated!');
+    } else {
+        abort(403, 'Unauthorized action.');
+    }
 }
+
 
 public function destroy($id)
 {
-    $role = Auth::user()->role;
-    if ($role !== User::ROLE_ADMIN) {
+    $user = auth()->user();
+
+    if ($user->role !== User::ROLE_ADMIN) {
         abort(403, 'Unauthorized action.');
     }
+
     $category = Category::findOrFail($id);
     $category->delete();
 
-    return redirect()->route('maintenance.category')->with('success', 'Category deleted!');
+    return redirect()->route('admin.maintenance.category')->with('success', 'Category deleted!');
 }
+
 }
 
 

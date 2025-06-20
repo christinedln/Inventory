@@ -63,7 +63,7 @@
                             Edit
                         </button>
                         <!-- Delete Button -->
-                        <form action="{{ route('maintenance.category.delete', $cat->category_id) }}" method="POST" style="display:inline;">
+                        <form action="{{ route('admin.maintenance.category.delete', $cat->category_id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger"
@@ -82,7 +82,7 @@
     <!-- Add Category Modal -->
     <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('maintenance.category.add') }}">
+            <form method="POST" action="{{ route('admin.maintenance.category.add') }}">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">

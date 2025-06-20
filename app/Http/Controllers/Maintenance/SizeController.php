@@ -22,48 +22,87 @@ class SizeController extends Controller
             $sizes = Size::all();
             return view('maintenance.adminsize', compact('sizes'));
         } elseif ($role === User::ROLE_INVENTORY_MANAGER) {
-            return view('maintenance.managersize');
+            return view('manager.maintenance.managersize');
         } else {
             abort(403, 'Unauthorized action.');
         }
     }
 
     public function store(Request $request)
-    {
-        $role = Auth::user()->role;
-        if ($role !== User::ROLE_ADMIN) {
-            abort(403, 'Unauthorized action.');
-        }
-        $request->validate([
-            'size' => 'required|string|unique:sizes,size',
-        ]);
-        Size::create(['size' => $request->size]);
-        return redirect()->route('maintenance.size')->with('success', 'Size added successfully!');
+{
+    $user = auth()->user();
+
+    // Allow only admin or manager roles
+    if (!in_array($user->role, ['admin', 'manager'])) {
+        abort(403, 'Unauthorized action.');
     }
+
+    $request->validate([
+        'size' => 'required|string|unique:sizes,size',
+    ]);
+
+    Size::create(['size' => $request->size]);
+
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.maintenance.size')->with('success', 'Size added successfully!');
+    } elseif ($user->role === 'manager') {
+        return redirect()->route('manager.maintenance.size')->with('success', 'Size added successfully!');
+    }
+}
+
     public function edit($id)
-    {
-        $size = \App\Models\Size::findOrFail($id);
-        return view('maintenance.editsize', compact('size'));
+{
+    $size = \App\Models\Size::findOrFail($id);
+    $user = auth()->user();
+
+    if ($user->role === 'admin') {
+        return view('maintenance.adminsize', compact('size'));
+    } elseif ($user->role === 'manager') {
+        return view('maintenance.managersize', compact('size'));
+    } else {
+        abort(403, 'Unauthorized action.');
     }
+}
+
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'size' => 'required|string|max:255|unique:sizes,size,' . $id . ',size_id',
-        ]);
+{
+    $user = auth()->user();
 
-        $size = \App\Models\Size::findOrFail($id);
-        $size->size = $request->size;
-        $size->save();
-
-        return redirect()->route('maintenance.size')->with('success', 'Size updated!');
+    // Only allow admin or manager
+    if (!in_array($user->role, ['admin', 'manager'])) {
+        abort(403, 'Unauthorized action.');
     }
+
+    $request->validate([
+        'size' => 'required|string|max:255|unique:sizes,size,' . $id . ',size_id',
+    ]);
+
+    $size = \App\Models\Size::findOrFail($id);
+    $size->size = $request->size;
+    $size->save();
+
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.maintenance.size')->with('success', 'Size updated!');
+    } elseif ($user->role === 'manager') {
+        return redirect()->route('manager.maintenance.size')->with('success', 'Size updated!');
+    }
+}
+
     public function destroy($id)
-    {
-        $size = \App\Models\Size::findOrFail($id);
-        $size->delete();
+{
+    $user = auth()->user();
 
-        return redirect()->route('maintenance.size')->with('success', 'Size deleted!');
+    // Only admin can delete
+    if ($user->role !== 'admin') {
+        abort(403, 'Unauthorized action.');
     }
+
+    $size = \App\Models\Size::findOrFail($id);
+    $size->delete();
+
+    return redirect()->route('admin.maintenance.size')->with('success', 'Size deleted!');
+}
+
 }
 
 

@@ -62,7 +62,7 @@
                             Edit
                         </button>
                         <!-- Delete Button -->
-                        <form action="{{ route('maintenance.size.delete', $size->size_id) }}" method="POST" style="display:inline;">
+                        <form action="{{ route('admin.maintenance.size.delete', $size->size_id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger"
@@ -81,7 +81,7 @@
     <!-- Add Size Modal -->
     <div class="modal fade" id="addSizeModal" tabindex="-1" aria-labelledby="addSizeModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('maintenance.size.add') }}">
+            <form method="POST" action="{{ route('admin.maintenance.size.add') }}">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">

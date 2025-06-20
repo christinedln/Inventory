@@ -60,7 +60,7 @@
                                 <!-- Edit Modal -->
                                 <div class="modal fade" id="editSizeModal-{{ $size->size_id ?? $size->id }}" tabindex="-1" aria-labelledby="editSizeModalLabel-{{ $size->size_id ?? $size->id }}" aria-hidden="true">
                                     <div class="modal-dialog">
-                                        <form method="POST" action="{{ route('maintenance.size.update', $size->size_id ?? $size->id) }}">
+                                        <form method="POST" action="{{ route('manager.maintenance.size.update', $size->size_id ?? $size->id) }}">
                                             @csrf
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -87,7 +87,7 @@
             <!-- Add Size Modal -->
             <div class="modal fade" id="addSizeModal" tabindex="-1" aria-labelledby="addSizeModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
-                    <form method="POST" action="{{ route('maintenance.size.add') }}">
+                    <form method="POST" action="{{ route('manager.maintenance.size.add') }}">
                         @csrf
                         <div class="modal-content">
                             <div class="modal-header">
