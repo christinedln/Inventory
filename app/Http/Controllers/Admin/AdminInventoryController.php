@@ -17,7 +17,26 @@ class AdminInventoryController extends Controller
     {
         $highlightId = session('highlight_id');
         $categories = Category::orderBy('category')->pluck('category');
-        $sizes = Size::orderBy('size')->pluck('size');
+        $sizes = Size::orderByRaw("
+        CASE 
+            WHEN size = 'XXS' THEN 1
+            WHEN size = 'XS' THEN 2
+            WHEN size = 'S' THEN 3
+            WHEN size = 'M' THEN 4
+            WHEN size = 'L' THEN 5
+            WHEN size = 'XL' THEN 6
+            WHEN size = 'XXL' THEN 7
+            WHEN size = '3XL' THEN 8
+            WHEN size = '4XL' THEN 9
+            WHEN size = '5XL' THEN 10
+            WHEN size ~ E'^\\\\d+$' THEN 11  -- if size is a number (like 28, 30), put after named sizes
+            ELSE 12
+        END,
+        CASE 
+            WHEN size ~ E'^\\\\d+$' THEN CAST(size AS INTEGER)
+            ELSE NULL
+        END
+    ")->pluck('size');
 
         $products = Product::orderBy('product_id', 'desc')->paginate(10);
         return view('admin.admininventory', compact('products', 'highlightId', 'categories', 'sizes'));

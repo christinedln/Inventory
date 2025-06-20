@@ -187,11 +187,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" name="quantity" class="form-control" id="quantity" required min="0">
+                            <input type="number" name="quantity" class="form-control" id="quantity" required min="0" value="0">
                         </div>
                         <div class="col-md-6">
                             <label for="price" class="form-label">Price (₱)</label>
-                            <input type="number" step="0.01" name="price" class="form-control" id="price" required min="0">
+                            <input type="number" step="0.01" name="price" class="form-control" id="price" required min="0" value="0.00">
                          </div>
                     </div>
 
