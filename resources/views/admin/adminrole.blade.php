@@ -62,7 +62,7 @@
                                                     {{ $role->status === 'Active' ? 'checked' : '' }}
                                                     onchange="toggleRole({{ $role->id }}, this)">
                                             </div>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteRole({{ $role->id }})">
+                                            <button class="btn btn-danger btn-sm" onclick="confirmDeleteRole({{ $role->id }})">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>
@@ -97,6 +97,30 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" onclick="addRole()">Add Role</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Delete Confirmation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this role? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="bi bi-trash me-2"></i>Delete Role
+                </button>
             </div>
         </div>
     </div>
@@ -162,8 +186,18 @@ function addRole() {
     });
 }
 
-function deleteRole(id) {
-    fetch(`/admin/roles/${id}`, {
+let roleIdToDelete = null;
+const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+
+function confirmDeleteRole(id) {
+    roleIdToDelete = id;
+    deleteModal.show();
+}
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+    if (!roleIdToDelete) return;
+    
+    fetch(`/admin/roles/${roleIdToDelete}`, {
         method: 'DELETE',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
@@ -174,15 +208,35 @@ function deleteRole(id) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            const row = document.querySelector(`#roleToggle${id}`).closest('tr');
+            const row = document.querySelector(`#roleToggle${roleIdToDelete}`).closest('tr');
             row.remove();
+            deleteModal.hide();
+            
+            // Show success toast
+            const toast = new bootstrap.Toast(Object.assign(document.createElement('div'), {
+                className: 'toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-3',
+                innerHTML: `
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Role successfully deleted
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                `
+            }));
+            document.body.appendChild(toast.element);
+            toast.show();
+            
+            setTimeout(() => toast.element.remove(), 3000);
         }
     })
     .catch(error => {
         console.error('Error:', error);
+        deleteModal.hide();
         alert('An error occurred while deleting the role.');
     });
-}
+});
 </script>
 
 <!-- Add custom styles for the toggle switch -->
@@ -203,6 +257,14 @@ function deleteRole(id) {
     .rotate-caret {
         transform: rotate(180deg);
     }
+
+.toast {
+    z-index: 1050;
+}
+
+.modal-header .btn-close {
+    margin: -0.5rem -0.5rem -0.5rem auto;
+}
 </style>
 </body>
 </html>
