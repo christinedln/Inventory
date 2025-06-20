@@ -20,6 +20,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\DailyInputController;
 use App\Http\Controllers\TargetInputFormController;
 use App\Http\Controllers\QuarterlySalesController;
+use App\Http\Middleware\NoCacheHeaders;
+use App\Http\Controllers\Manager\ManagerCategoryController;
 
 // Guest routes
 Route::middleware('guest')->group(function () {
@@ -37,13 +39,13 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-    // Admin routes
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::middleware(['auth', NoCacheHeaders::class])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/inventory', [AdminInventoryController::class, 'store'])->name('admin.inventory.store');
     Route::get('/inventory', [AdminInventoryController::class, 'index'])->name('admin.inventory');
     Route::get('/product/delete/{id}', [AdminInventoryController::class, 'delete'])->name('admin.product.delete');
     Route::post('/product/update/{id}', [AdminInventoryController::class, 'update'])->name('admin.products.update');
+    Route::patch('/product/approve/{id}', [AdminInventoryController::class, 'approve'])->name('admin.product.approve');
     Route::get('/notification', [AdminNotificationController::class, 'index'])->name('admin.notification');
     Route::post('/notifications/{id}/resolve', [AdminNotificationController::class, 'resolve'])->name('admin.notifications.resolve');
     Route::post('/notifications/{id}/toggle-status', [AdminNotificationController::class, 'toggleStatus'])->name('admin.notifications.toggleStatus');
@@ -64,9 +66,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
 });
 
-
-    // Inventory Manager Routes
-    Route::middleware(['auth'])->prefix('manager')->group(function () {
+Route::middleware(['auth', NoCacheHeaders::class])->prefix('manager')->group(function () {
     Route::get('/dashboard', [ManagerDashboardController::class, 'index'])->name('manager.dashboard');
     Route::post('/inventory', [ManagerInventoryController::class, 'store'])->name('manager.inventory.store');
     Route::get('/inventory', [ManagerInventoryController::class, 'index'])->name('manager.inventory');
@@ -87,6 +87,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/maintenance/managersize/{size}', [SizeController::class, 'update'])->name('manager.maintenance.size.update');
     Route::get('/maintenance/managersize/{size}/edit', [SizeController::class, 'edit'])->name('manager.maintenance.size.edit');
 
+    Route::get('/manager/dropdowns', [CategoryController::class, 'getDropdownData'])->name('manager.dropdowns');
 });
 
 //Route::post('/inventory', [ProductController::class, 'store'])->name('inventory.store');
@@ -95,7 +96,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 //Route::post('/product/update/{id}', [ProductController::class, 'update'])->name('products.update');
 
 // User routes
-Route::middleware(['auth'])->prefix('user')->group(function () {
+Route::middleware(['auth', NoCacheHeaders::class])->prefix('user')->group(function () {
     Route::get('/dashboard', function () {
         if (auth()->user()->role !== User::ROLE_USER) {
             return redirect()->route(auth()->user()->getDashboardRoute());
@@ -105,13 +106,13 @@ Route::middleware(['auth'])->prefix('user')->group(function () {
 });
 
 // Shared authenticated routes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', NoCacheHeaders::class])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 Route::prefix('sales-report')
     ->name('sales-report.')
-    ->middleware(['auth'])  // Only use auth middleware here
+    ->middleware(['auth', NoCacheHeaders::class])
     ->group(function () {
         Route::get('/daily-sales', [DailyInputController::class, 'index'])->name('daily-sales.index');
         Route::post('/daily-sales', [DailyInputController::class, 'store'])->name('daily-sales.store');

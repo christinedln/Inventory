@@ -38,6 +38,9 @@ class QuarterlySalesController extends Controller
             ];
         }
 
-        return view('sales-report.quarterly-sales', compact('quarterlyData'));
+        return view('sales-report.quarterly-sales', [
+            'currentYear' => now()->year,
+            'quarterlyData' => $quarterlyData,
+        ]);
     }
 }

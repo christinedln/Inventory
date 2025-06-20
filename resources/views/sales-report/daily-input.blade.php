@@ -1,182 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Daily Sales Input</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 2rem;
-        }
-        .table-responsive {
-            margin-top: 20px;
-        }
-        .thead-dark {
-            background-color: #0d6efd;
-            color: white;
-        }
-        .table td {
-            vertical-align: middle;
-        }
-        .modal-dialog {
-            max-width: 800px;
-        }
-        .history-table th {
-            background-color: #0d6efd;
-            color: white;
-        }
-        .modal-body {
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-        .history-table thead {
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-        .history-table thead th {
-            background-color: #0d6efd;
-            color: white;
-        }
-        .action-buttons {
-            margin-top: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .action-buttons .btn {
-            padding: 0.5rem 1.5rem;
-            font-weight: 500;
-        }
-        .input-table {
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuffed</title>
+    @vite(['resources/css/salesreport.css'])
+    @vite(['resources/js/salesreport.js'])
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-                <h2 class="mb-0">Daily Sales Input Form</h2>
+
+<!-- Header with toggle on small screens -->
+<nav class="navbar navbar-light bg-light d-md-none">
+    <div class="container-fluid">
+        <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
+            <i class="bi bi-list"></i>
+        </button>
+        <span class="navbar-brand mb-0 h1">Cuffed</span>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        @include('layouts.sidebar')
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Daily Sales Input Form</h4>
             </div>
-            <div class="card-body">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
 
-                <form action="{{ route('sales-report.daily-sales.store') }}" method="POST">
-                    @csrf
-                    <!-- Input Table -->
-                    <div class="table-responsive input-table">
-                        <table class="table table-bordered mb-0">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Daily Revenue (₱)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <input type="date" class="form-control" id="date" 
-                                            name="date" value="{{ $today }}" required>
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.01" class="form-control" 
-                                            id="daily_revenue" name="daily_revenue" required>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
 
-                    <!-- Action Buttons -->
-                    <div class="action-buttons">
-                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#historyModal">
-                            <i class="fas fa-history"></i> View Sales History
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            Submit
-                        </button>
-                    </div>
-                </form>
+            <!-- Input Form Card -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form action="{{ route('sales-report.daily-sales.store') }}" method="POST">
+                        @csrf
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Daily Revenue (₱)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="date" class="form-control" id="date" 
+                                                name="date" value="{{ $today }}" required>
+                                        </td>
+                                        <td>
+                                            <input type="number" step="0.01" class="form-control" 
+                                                id="daily_revenue" name="daily_revenue" required>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#historyModal">
+                                View History
+                            </button>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- History Modal -->
+<div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="historyModalLabel">Sales History</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Date</th>
+                                <th>Daily Revenue</th>
+                                <th>Entry Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($entries->sortByDesc('date') as $entry)
+                            <tr>
+                                <td>{{ $entry->date->format('M d, Y') }}</td>
+                                <td>₱{{ number_format($entry->daily_revenue, 2) }}</td>
+                                <td>{{ $entry->created_at->format('h:i A') }}</td>
+                                <td>
+                                    <form action="{{ route('sales-report.daily-sales.destroy', $entry->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-danger border-0 bg-transparent" 
+                                            onclick="return confirm('Are you sure you want to delete this entry?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- History Modal -->
-    <div class="modal fade" id="historyModal" tabindex="-1" aria-labelledby="historyModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="historyModalLabel">Sales History</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover history-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Daily Revenue</th>
-                                    <th>Entry Time</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($entries->sortByDesc('date') as $entry)
-                                <tr>
-                                    <td>{{ $entry->date->format('M d, Y') }}</td>
-                                    <td>₱ {{ number_format($entry->daily_revenue, 2) }}</td>
-                                    <td>{{ $entry->created_at->format('h:i A') }}</td>
-                                    <td class="text-center">
-                                        <form action="{{ route('sales-report.daily-sales.destroy', $entry->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" 
-                                                onclick="return confirm('Are you sure you want to delete this entry?')">
-                                                <i class="far fa-trash-alt"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Handle pagination clicks in modal
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('historyModal');
-            modal.addEventListener('click', function(e) {
-                if (e.target.tagName === 'A' && e.target.getAttribute('href')) {
-                    e.preventDefault();
-                    fetch(e.target.getAttribute('href'))
-                        .then(response => response.text())
-                        .then(html => {
-                            document.querySelector('.modal-body').innerHTML = html;
-                        });
-                }
-            });
-        });
-    </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

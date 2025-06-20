@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             TargetSalesSeeder::class,
             CategorySeeder::class,
             SizeSeeder::class,
+            CartSeeder::class,
+            CheckoutSeeder::class,
         ]);
     }
 }

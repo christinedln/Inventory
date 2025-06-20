@@ -10,7 +10,11 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 @vite(['resources/js/sidebar.js'])
 
+<<<<<<< HEAD
 @if($user && ($user->role === \App\Models\User::ROLE_ADMIN) )
+=======
+@if($user && $user->role === \App\Models\User::ROLE_ADMIN)
+>>>>>>> c12a34d5dffa73c6dce250e6ee4fbfb3854970a2
 <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
     <h4><strong>Cuffed</strong></h4>
     <ul class="nav flex-column">
@@ -102,9 +106,13 @@
     <ul class="nav flex-column">
         <li><a href="{{ route('manager.dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
         <li><a href="{{ route('manager.inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
+<<<<<<< HEAD
 
         <!-- Sales Report Dropdown -->
          <li class="nav-item">
+=======
+        <li class="nav-item">
+>>>>>>> c12a34d5dffa73c6dce250e6ee4fbfb3854970a2
             <button class="nav-link d-flex justify-content-between align-items-center w-100 border-0 bg-transparent"
                 type="button"
                 data-bs-toggle="collapse"
@@ -126,6 +134,7 @@
                 </div>
             </div>
         </li>
+<<<<<<< HEAD
 
         <!-- User Maintenance Dropdown (Bootstrap Collapse) -->
         <li class="nav-item">
@@ -151,6 +160,8 @@
             </div>
         </li>
 
+=======
+>>>>>>> c12a34d5dffa73c6dce250e6ee4fbfb3854970a2
         <li class="nav-item">
             <button class="nav-link d-flex justify-content-between align-items-center w-100 border-0 bg-transparent"
                 type="button"
@@ -166,15 +177,25 @@
             <div class="collapse" id="maintenanceCollapse">
                 <div class="border-start ms-3">
                     <ul class="nav flex-column ps-3 mt-1">
+<<<<<<< HEAD
                         <li><a class="nav-link py-1" href="{{ route('manager.maintenance.category') }}">Categories</a></li>
                         <li><a class="nav-link py-1" href="{{ route('manager.maintenance.size') }}">Size</a></li>
+=======
+                        <li><a class="nav-link py-1" href= "{{ route('manager.maintenance.category') }}">Categories</a></li>
+                        <li><a class="nav-link py-1" href= "{{ route('manager.maintenance.size') }}">Size</a></li>
+>>>>>>> c12a34d5dffa73c6dce250e6ee4fbfb3854970a2
                     </ul>
                 </div>
             </div>
         </li>
+<<<<<<< HEAD
 
 
         <li><a href="{{ route('manager.notification') }}" class="nav-link active"><i class="bi bi-bell me-2"></i>Notifications
+=======
+        <li><a href="{{ route('manager.notification') }}"  class="nav-link active">
+            <i class="bi bi-bell me-2"></i>Notifications
+>>>>>>> c12a34d5dffa73c6dce250e6ee4fbfb3854970a2
             @if(isset($unresolvedCount) && $unresolvedCount > 0)
                 <span class="badge bg-danger">{{ $unresolvedCount }}</span>
             @endif
@@ -184,7 +205,7 @@
 @endif
 
 <!-- Offcanvas (mobile sidebar) -->
-@if($user && ($user->role === \App\Models\User::ROLE_ADMIN || $user->role === \App\Models\User::ROLE_INVENTORY_MANAGER))
+@if($user && $user->role === \App\Models\User::ROLE_ADMIN)
 <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title">Inventory</h5>
@@ -211,7 +232,7 @@
                         Sales Report
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="salesReportDropdownMobile">
-                        <li><a class="dropdown-item" href="#">Daily Report</a></li>
+                        <li><a class="dropdown-item" href="#">Daily Input Form</a></li>
                         <li><a class="dropdown-item" href="#">Monthly Report</a></li>
                         <li><a class="dropdown-item" href="#">Annual Report</a></li>
                     </ul>

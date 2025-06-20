@@ -15,6 +15,9 @@ class AuthController extends Controller
      */
     public function showLogin()
     {
+        if (auth()->check()) {
+            return redirect()->route(auth()->user()->getDashboardRoute());
+        }
         return view('auth.login');
     }
 
@@ -64,6 +67,9 @@ class AuthController extends Controller
      */
     public function showRegister()
     {
+        if (auth()->check()) {
+            return redirect()->route(auth()->user()->getDashboardRoute());
+        }
         return view('auth.register');
     }
 
