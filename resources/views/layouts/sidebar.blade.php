@@ -58,7 +58,7 @@
                 <div class="border-start ms-3">
                     <ul class="nav flex-column ps-3 mt-1">
                         <li><a class="nav-link py-1" href="#">User Accounts</a></li>
-                        <li><a class="nav-link py-1" href="#">Roles and Permissions</a></li>
+                        <li><a class="nav-link py-1" href="{{ route('admin.roles') }}">Roles and Permissions</a></li>
                         <li><a class="nav-link py-1" href="#">User Access Control</a></li>
                     </ul>
                 </div>
@@ -173,7 +173,7 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="userDropdownMobile">
                         <li><a class="dropdown-item" href="#">User Accounts</a></li>
-                        <li><a class="dropdown-item" href="#">Roles and Permissions</a></li>
+                        <li><a class="dropdown-item" href="{{ route('admin.roles') }}">Roles and Permissions</a></li>
                         <li><a class="dropdown-item" href="#">User Access Control</a></li>
                     </ul>
                 </li>

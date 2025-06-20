@@ -22,6 +22,7 @@ use App\Http\Controllers\TargetInputFormController;
 use App\Http\Controllers\QuarterlySalesController;
 use App\Http\Middleware\NoCacheHeaders;
 use App\Http\Controllers\Manager\ManagerCategoryController;
+use App\Http\Controllers\Admin\RoleController;
 
 // Guest routes
 Route::middleware('guest')->group(function () {
@@ -53,6 +54,10 @@ Route::middleware(['auth', NoCacheHeaders::class])->prefix('admin')->group(funct
     Route::get('/maintenance/size', [AdminSizeController::class, 'index'])->name('admin.maintenance.size');
     Route::get('/maintenance/category', [CategoryController::class, 'index'])->name('admin.maintenance.category');
     Route::get('/maintenance/size', [SizeController::class, 'index'])->name('admin.maintenance.size');
+    Route::get('/roles', [RoleController::class, 'index'])->name('admin.roles');
+    Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
+    Route::post('/roles/{id}/toggle', [RoleController::class, 'toggle'])->name('admin.roles.toggle');
+    Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 });
 
 Route::middleware(['auth', NoCacheHeaders::class])->prefix('manager')->group(function () {
