@@ -14,19 +14,19 @@ use App\Models\Size;
 class SizeController extends Controller
 {
     public function index()
-    {
-        $role = Auth::user()->role;
+{
+    $role = Auth::user()->role;
+    $sizes = Size::all(); // ✅ Moved outside the role condition
 
-
-        if ($role === User::ROLE_ADMIN) {
-            $sizes = Size::all();
-            return view('maintenance.adminsize', compact('sizes'));
-        } elseif ($role === User::ROLE_INVENTORY_MANAGER) {
-            return view('manager.maintenance.managersize');
-        } else {
-            abort(403, 'Unauthorized action.');
-        }
+    if ($role === User::ROLE_ADMIN) {
+        return view('maintenance.adminsize', compact('sizes'));
+    } elseif ($role === User::ROLE_INVENTORY_MANAGER) {
+        return view('maintenance.managersize', compact('sizes'));
+    } else {
+        abort(403, 'Unauthorized action.');
     }
+}
+
 
     public function store(Request $request)
 {

@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 @vite(['resources/js/sidebar.js'])
 
-@if($user && ($user->role === \App\Models\User::ROLE_ADMIN || $user->role === \App\Models\User::ROLE_INVENTORY_MANAGER))
+@if($user && ($user->role === \App\Models\User::ROLE_ADMIN) )
 <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
     <h4><strong>Cuffed</strong></h4>
     <ul class="nav flex-column">
@@ -100,8 +100,8 @@
 <div class="col-md-3 col-lg-2 d-none d-md-block bg-light sidebar p-3">
     <h4><strong>Cuffed</strong></h4>
     <ul class="nav flex-column">
-        <li><a href="{{ route('admin.dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-        <li><a href="{{ route('admin.inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
+        <li><a href="{{ route('manager.dashboard') }}" class="nav-link"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+        <li><a href="{{ route('manager.inventory') }}" class="nav-link"><i class="bi bi-box-seam me-2"></i>Inventory</a></li>
 
         <!-- Sales Report Dropdown -->
          <li class="nav-item">
@@ -174,7 +174,7 @@
         </li>
 
 
-        <li><a href="{{ route('admin.notification') }}" class="nav-link active"><i class="bi bi-bell me-2"></i>Notifications
+        <li><a href="{{ route('manager.notification') }}" class="nav-link active"><i class="bi bi-bell me-2"></i>Notifications
             @if(isset($unresolvedCount) && $unresolvedCount > 0)
                 <span class="badge bg-danger">{{ $unresolvedCount }}</span>
             @endif

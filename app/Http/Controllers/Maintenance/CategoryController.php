@@ -62,7 +62,7 @@ public function edit($id)
     if ($user->role === 'admin') {
         return view('maintenance.admincategory', compact('category'));
     } elseif ($user->role === 'manager') {
-        return view('manager.maintenance.managercategory', compact('category'));
+        return view('maintenance.managercategory', compact('category'));
     } else {
         abort(403, 'Unauthorized action.');
     }
