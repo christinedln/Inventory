@@ -18,7 +18,11 @@ class DatabaseSeeder extends Seeder
             ManagerUserSeeder::class,
             ProductsTableSeeder::class,
             DailySalesSeeder::class,
-            TargetSalesSeeder::class
+            TargetSalesSeeder::class,
+            CartSeeder::class,
+            CheckoutSeeder::class,
+            CategoriesSeeder::class,
+            SizesSeeder::class
         ]);
     }
 }

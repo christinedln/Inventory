@@ -21,6 +21,7 @@ use App\Http\Controllers\DailyInputController;
 use App\Http\Controllers\TargetInputFormController;
 use App\Http\Controllers\QuarterlySalesController;
 use App\Http\Middleware\NoCacheHeaders;
+use App\Http\Controllers\Manager\ManagerCategoryController;
 
 // Guest routes
 Route::middleware('guest')->group(function () {
@@ -44,6 +45,7 @@ Route::middleware(['auth', NoCacheHeaders::class])->prefix('admin')->group(funct
     Route::get('/inventory', [AdminInventoryController::class, 'index'])->name('admin.inventory');
     Route::get('/product/delete/{id}', [AdminInventoryController::class, 'delete'])->name('admin.product.delete');
     Route::post('/product/update/{id}', [AdminInventoryController::class, 'update'])->name('admin.products.update');
+    Route::patch('/product/approve/{id}', [AdminInventoryController::class, 'approve'])->name('admin.product.approve');
     Route::get('/notification', [AdminNotificationController::class, 'index'])->name('admin.notification');
     Route::post('/notifications/{id}/resolve', [AdminNotificationController::class, 'resolve'])->name('admin.notifications.resolve');
     Route::post('/notifications/{id}/toggle-status', [AdminNotificationController::class, 'toggleStatus'])->name('admin.notifications.toggleStatus');
@@ -64,6 +66,7 @@ Route::middleware(['auth', NoCacheHeaders::class])->prefix('manager')->group(fun
     Route::post('/notifications/{id}/toggle-status', [ManagerNotificationController::class, 'toggleStatus'])->name('manager.notifications.toggleStatus');
     Route::get('/maintenance/category', [CategoryController::class, 'index'])->name('manager.maintenance.category');
     Route::get('/maintenance/size', [SizeController::class, 'index'])->name('manager.maintenance.size');
+    Route::get('/manager/dropdowns', [CategoryController::class, 'getDropdownData'])->name('manager.dropdowns');
 });
 
 //Route::post('/inventory', [ProductController::class, 'store'])->name('inventory.store');

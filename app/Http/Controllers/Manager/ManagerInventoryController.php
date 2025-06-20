@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Size;
 
 class ManagerInventoryController extends Controller
 {
@@ -13,24 +15,28 @@ class ManagerInventoryController extends Controller
     public function index(Request $request)
     {
         $highlightId = session('highlight_id');
+        $categories = Category::orderBy('category')->pluck('category');
+        $sizes = Size::orderBy('size')->pluck('size');
 
         $products = Product::orderBy('product_id', 'desc')->paginate(10);
-        return view('manager.managerinventory', compact('products', 'highlightId'));
+        return view('manager.managerinventory', compact('products', 'highlightId', 'categories', 'sizes'));
     }
 
     //Store a new product in the products table
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'product_name' => 'required|string|max:255',
-            'clothing_type' => 'required|string',
-            'color' => 'required|string',
-            'size' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
-            'image' => 'required|image|max:15360',
-             // 15MB max
-        ]);
+        'product_name' => 'required|string|max:255',
+        'clothing_type' => 'required|string',
+        'color' => 'required|string',
+        'size' => 'required|string',
+        'quantity' => 'required|integer|min:1',
+        'price' => 'required|numeric|min:0',
+        'image' => 'required|image|max:15360', // 15MB max
+    ], [
+        'image.max' => 'The image must not be larger than 15MB.',
+    ]);
+
 
         // Check for duplicate product
         $exists = Product::where('product_name', $validated['product_name'])
@@ -70,7 +76,7 @@ class ManagerInventoryController extends Controller
     }
 
     //Update a product’s information and triggers a notification if a products's quantity is below 10
-  public function update(Request $request, $id)  
+public function update(Request $request, $id)  
 {
     $product = Product::findOrFail($id);
     $originalQuantity = $product->quantity;
@@ -83,24 +89,56 @@ class ManagerInventoryController extends Controller
         'quantity' => 'required|integer|min:1',
         'price' => 'required|numeric|min:0',
         'reason' => 'nullable|string|max:1000',
+        'image' => 'nullable|image|max:15360', // 15MB max
+    ], [
+        'image.max' => 'The image must not be larger than 15MB.',
     ]);
 
-    $data = [
-        'product_name' => $validated['product_name'],
-        'clothing_type' => $validated['clothing_type'],
-        'color' => $validated['color'],
-        'size' => $validated['size'],
-        'quantity' => $validated['quantity'],
-        'price' => $validated['price'],
-    ];
+    // Check if the product is in cart_items or checkouts
+    $isInCart = DB::table('cart_items')->where('product_id', $product->product_id)->exists();
+    $isInCheckout = DB::table('checkouts')->where('product_id', $product->product_id)->exists();
 
-    // Add last_reason *after* defining $data
+    if ($isInCart || $isInCheckout) {
+        if (
+            $validated['product_name'] !== $product->product_name ||
+            $validated['clothing_type'] !== $product->clothing_type ||
+            $validated['color'] !== $product->color ||
+            $validated['size'] !== $product->size
+        ) {
+            return back()->withErrors([
+                'restricted' => 'You cannot edit the product name, clothing type, color, or size because this product exists in a cart or has already been checked out.'
+            ])->withInput();
+        }
+
+        $data = [
+            'price' => $validated['price'],
+        ];
+    } else {
+        $data = [
+            'product_name' => $validated['product_name'],
+            'clothing_type' => $validated['clothing_type'],
+            'color' => $validated['color'],
+            'size' => $validated['size'],
+            'price' => $validated['price'],
+        ];
+    }
+
+    // Check if quantity is being reduced
     if ($validated['quantity'] < $originalQuantity) {
         if (!$request->filled('reason')) {
             return back()->withErrors(['reason' => 'Please provide a reason for reducing the quantity.'])->withInput();
         }
 
+        $reductionAmount = $originalQuantity - $validated['quantity'];
+
+        $data['requested_reduction'] = $reductionAmount;
+        $data['status'] = 'for approval';
         $data['last_reason'] = $validated['reason'];
+    } else {
+        $data['quantity'] = $validated['quantity'];
+        $data['requested_reduction'] = null;
+        $data['status'] = null;
+        $data['last_reason'] = null;
     }
 
     // Handle image replacement
@@ -116,7 +154,7 @@ class ManagerInventoryController extends Controller
     $product->update($data);
 
     // Low stock check
-    if ($product->quantity < 10) {
+    if (isset($data['quantity']) && $data['quantity'] < 10) {
         $latestNotification = DB::table('notifications')
             ->where('notification', "{$product->product_name} is low on stock")
             ->where('notifiable_id', $product->product_id)

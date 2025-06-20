@@ -21,6 +21,9 @@ class Product extends Model
         'price',
         'image_path',
         'last_reason',
+        'status',
+        'status',
+        'requested_reduction',
     ];
 }
 

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('color', 30);
             $table->string('size', 20);
             $table->integer('quantity');
+            $table->integer('requested_reduction')->nullable(); 
             $table->decimal('price', 10, 2);
             $table->string('image_path');
             $table->string('last_reason', 1000)->nullable();

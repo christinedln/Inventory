@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cuffed</title>
     @vite(['resources/css/inventory.css'])
-    @vite(['resources/js/inventory.js'])
+    @vite(['resources/js/managerinventory.js'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 </head>
@@ -40,6 +40,14 @@
                         {{ $errors->first('duplicate') }}
                     </div>
                 @endif
+                                    @error('image')
+            <small class="text-danger">{{ $message }}</small>
+        @enderror
+            @if ($errors->has('restricted'))
+    <div class="alert alert-danger">
+        {{ $errors->first('restricted') }}
+    </div>
+@endif
 
         <!-- Product List -->
         <div class="card shadow-sm">
@@ -56,7 +64,9 @@
                             <th>Size</th>
                             <th>Date</th>
                             <th>Quantity</th>
+                            <th>Requested Reduction</th>
                             <th>Reason for Reduced Quantities</th>
+                            <th>Status</th>
                             <th>Price</th>
                             <th>Actions</th>
                         </tr>
@@ -85,7 +95,9 @@
                         @endif
                         </td>
                         <td>{{ $product->quantity }}</td>
+                        <td>{{ $product->requested_reduction }}</td>
                         <td>{{ $product->last_reason }}</td>
+                        <td>{{ $product->status }}</td>
                         <td>₱{{ number_format($product->price, 2) }}</td>
                         <td>
                             <a href="#"
@@ -132,7 +144,7 @@
             </div>
             <div class="modal-body">
 
-                <form method="POST" action="{{ route('admin.inventory.store') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('manager.inventory.store') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
                         <div class="col-md-12">
@@ -146,16 +158,12 @@
                         <div class="col-md-6">
                             <label for="clothing_type" class="form-label">Clothing Type</label>
                             <select class="form-select" name="clothing_type" id="clothing_type" required>
-                                <option value="" selected disabled>Select clothing type</option>
-                                <option value="Shirts">Shirts</option>
-                                <option value="Sweaters">Sweaters</option>
-                                <option value="Hoodies">Hoodies</option>
-                                <option value="Pants">Pants</option>
-                                <option value="Skirts">Skirts</option>
-                                <option value="Trousers">Trousers</option>
-                                <option value="Shorts">Shorts</option>
-                                <option value="Dresses">Dresses</option>
-                            </select>
+                            <option value="" selected disabled>Select clothing type</option>
+                            @foreach($categories as $category)
+                                <option value="{{ $category }}">{{ $category }}</option>
+                            @endforeach
+                        </select>
+
                         </div>
                     </div>
 
@@ -168,14 +176,11 @@
                             <label for="size" class="form-label">Size</label>
                             <select class="form-select" name="size" id="size" required>
                                 <option value="" selected disabled>Select size</option>
-                                <option value="XS">XS</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                                <option value="XXL">XXL</option>
-                                <option value="Free Size">Free Size</option>
+                                @foreach($sizes as $size)
+                                    <option value="{{ $size }}">{{ $size }}</option>
+                                @endforeach
                             </select>
+
                         </div>
                     </div>
 
@@ -227,15 +232,11 @@
                             <label for="edit-clothing_type" class="form-label">Clothing Type</label>
                             <select class="form-select" name="clothing_type" id="edit-clothing_type" required>
                                 <option value="" selected disabled>Select clothing type</option>
-                                <option value="Shirts">Shirts</option>
-                                <option value="Sweaters">Sweaters</option>
-                                <option value="Hoodies">Hoodies</option>
-                                <option value="Pants">Pants</option>
-                                <option value="Skirts">Skirts</option>
-                                <option value="Trousers">Trousers</option>
-                                <option value="Shorts">Shorts</option>
-                                <option value="Dresses">Dresses</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category }}">{{ $category }}</option>
+                                @endforeach
                             </select>
+
                         </div>
                     </div>
 
@@ -248,14 +249,11 @@
                             <label for="edit-size" class="form-label">Size</label>
                             <select class="form-select" name="size" id="edit-size" required>
                                 <option value="" selected disabled>Select size</option>
-                                <option value="XS">XS</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                                <option value="XXL">XXL</option>
-                                <option value="Free Size">Free Size</option>
+                                @foreach($sizes as $size)
+                                    <option value="{{ $size }}">{{ $size }}</option>
+                                @endforeach
                             </select>
+
                         </div>
                     </div>
 
@@ -278,9 +276,10 @@
 
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">Save Product</button>
-                        <button type="button" class="btn btn-warning ms-2" id="applyApprovalBtn" style="display: none;">
-                        Apply for Approval
-                    </button>
+                        <button type="submit" class="btn btn-warning ms-2" name="apply_for_approval" value="1" id="applyApprovalBtn" style="display: none;">
+                            Apply for Approval
+                        </button>
+
                     </div>
  
                 </form>
