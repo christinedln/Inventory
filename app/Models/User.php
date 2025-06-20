@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -25,7 +25,8 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'role'
+        'role',
+        'role_id'
     ];
 
     /**
@@ -49,6 +50,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Check if user's role is active
+     */
+    public function isRoleActive(): bool
+    {
+        $roleModel = $this->role()->first();
+        return $roleModel && $roleModel->status === 'Active';
     }
 
     /**
@@ -85,5 +95,34 @@ class User extends Authenticatable
             self::ROLE_INVENTORY_MANAGER => 'manager.dashboard',
             default => 'user.dashboard',
         };
+    }
+
+    /**
+     * Boot the model
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // When creating/updating a user, sync the role_id based on the role string
+        static::saving(function ($user) {
+            if ($user->isDirty('role')) {
+                $roleId = DB::table('roles')
+                    ->where('role', $user->role)
+                    ->value('id');
+                
+                if ($roleId) {
+                    $user->role_id = $roleId;
+                }
+            }
+        });
+    }
+
+    /**
+     * Get the role that owns the user
+     */
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }
