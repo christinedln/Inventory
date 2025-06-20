@@ -28,6 +28,15 @@
             text-align: center;
             vertical-align: middle;
         }
+        
+        .text-success, .text-danger {
+            font-weight: bold;
+        }
+        
+        .trend-icon {
+            font-weight: bold;
+            font-size: 0.875rem;
+        }
     </style>
 </head>
 <body>
